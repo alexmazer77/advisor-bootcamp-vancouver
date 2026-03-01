@@ -1145,11 +1145,6 @@
           <div class="input-hint">Per employee (e.g., $500/mo = $6,000)</div>
         </div>
         <div class="calc-field">
-          <label>Avg. transfers in / member ($)</label>
-          <input type="number" id="calcTransfers" value="5000" min="0" max="200000" step="500" oninput="updateCalculator()">
-          <div class="input-hint">One-time transfer-in when plan starts</div>
-        </div>
-        <div class="calc-field">
           <label>Cashflow commission (% of contributions)</label>
           <input type="number" id="calcCFComm" value="1.0" min="0" max="5" step="0.1" oninput="updateCalculator()">
           <div class="input-hint">Commission on each contribution dollar</div>
@@ -1159,8 +1154,25 @@
           <input type="number" id="calcAUAComm" value="0.25" min="0" max="2" step="0.05" oninput="updateCalculator()">
           <div class="input-hint">Trailing commission on total AUA</div>
         </div>
+        <div class="calc-field">
+          <label>Avg. bulk transfer AUA ($)</label>
+          <input type="number" id="calcBulkAUA" value="1000000" min="0" max="50000000" step="50000" oninput="updateCalculator()">
+          <div class="input-hint">Total AUA transferred per bulk plan</div>
+        </div>
+        <div class="calc-field">
+          <label>Bulk transfer compensation (%)</label>
+          <input type="number" id="calcBulkComp" value="1.0" min="0" max="5" step="0.1" oninput="updateCalculator()">
+          <div class="input-hint">One-time commission on bulk transfer AUA</div>
+        </div>
       </div>
 
+      <div class="calc-field" style="margin-bottom: 12px;">
+        <label>Bulk transfers vs. startups</label>
+        <div class="slider-row">
+          <input type="range" id="calcBulkPct" min="0" max="100" step="5" value="25" oninput="updateCalculator(); document.getElementById('bulkDisplay').textContent=this.value+'% bulk / '+(100-this.value)+'% startup'">
+          <span class="slider-value" id="bulkDisplay">25% bulk / 75% startup</span>
+        </div>
+      </div>
       <div class="calc-field" style="margin-bottom: 28px;">
         <label>Investment return assumption</label>
         <div class="slider-row">
@@ -1183,6 +1195,7 @@
             <div style="display: flex; gap: 12px; font-size: 12px;">
               <span><span style="color: var(--cw-pistachio);">●</span> Cashflow</span>
               <span><span style="color: var(--cw-sand);">●</span> AUA-based</span>
+              <span><span style="color: var(--cw-lilac);">●</span> Bulk</span>
             </div>
           </div>
           <div id="chartBarsRev"></div>
@@ -1427,9 +1440,11 @@
     const plans = parseInt(document.getElementById('calcPlans').value) || 0;
     const emps = parseInt(document.getElementById('calcEmps').value) || 0;
     const contrib = parseFloat(document.getElementById('calcContrib').value) || 0;
-    const transfers = parseFloat(document.getElementById('calcTransfers').value) || 0;
     const cfComm = parseFloat(document.getElementById('calcCFComm').value) || 0;
     const auaComm = parseFloat(document.getElementById('calcAUAComm').value) || 0;
+    const bulkAUA = parseFloat(document.getElementById('calcBulkAUA').value) || 0;
+    const bulkComp = parseFloat(document.getElementById('calcBulkComp').value) || 0;
+    const bulkPct = (parseFloat(document.getElementById('calcBulkPct').value) || 0) / 100;
     const annualReturn = (parseFloat(document.getElementById('calcReturn').value) || 0) / 100;
     const monthlyReturn = Math.pow(1 + annualReturn, 1/12) - 1;
 
@@ -1437,16 +1452,24 @@
     let data = [];
     let totalAUA = 0;
     let totalPlans = 0;
+    let cumulativeBulkRev = 0;
 
     for (let y = 1; y <= years; y++) {
-      // New plans added at start of year
+      // Split new plans into bulk transfers and startups
       const newPlans = plans;
+      const bulkPlans = Math.round(newPlans * bulkPct);
+      const startupPlans = newPlans - bulkPlans;
       const newMembers = newPlans * emps;
       totalPlans += newPlans;
       const totalMembers = totalPlans * emps;
 
-      // Transfers in from new members (one-time, at start of year)
-      totalAUA += newMembers * transfers;
+      // Bulk transfer AUA (one-time, at start of year)
+      const yearBulkAUA = bulkPlans * bulkAUA;
+      totalAUA += yearBulkAUA;
+
+      // One-time bulk transfer compensation
+      const yearBulkRev = yearBulkAUA * (bulkComp / 100);
+      cumulativeBulkRev += yearBulkRev;
 
       // Monthly compounding: each month, grow existing AUA then add contributions
       const monthlyContrib = (totalMembers * contrib) / 12;
@@ -1459,13 +1482,14 @@
       const annualContribs = totalMembers * contrib;
       const cashflowRev = annualContribs * (cfComm / 100);
       const auaRev = totalAUA * (auaComm / 100);
-      const totalRev = cashflowRev + auaRev;
+      const totalRev = cashflowRev + auaRev + yearBulkRev;
 
       data.push({
         year: y,
         aum: totalAUA,
         cashflowRev,
         auaRev,
+        bulkRev: yearBulkRev,
         totalRev,
         plans: totalPlans,
         members: totalMembers
@@ -1494,19 +1518,22 @@
       y10.plans + ' plans \u00b7 ' + y10.members.toLocaleString() + ' members by Year 10</div>';
     document.getElementById('chartBarsAUA').innerHTML = auaHTML;
 
-    // Render Revenue chart (separate, stacked cashflow + AUA-based)
-    const maxRev = data[years - 1].totalRev;
+    // Render Revenue chart (stacked: cashflow + AUA-based + bulk)
+    const maxRev = Math.max(...data.map(d => d.totalRev));
     let revHTML = '';
     data.forEach(d => {
-      const cfPct = maxRev > 0 ? (d.cashflowRev / maxRev) * 100 : 0;
-      const auaPct = maxRev > 0 ? (d.auaRev / maxRev) * 100 : 0;
+      const totalPct = maxRev > 0 ? (d.totalRev / maxRev) * 100 : 0;
+      const cfShare = d.totalRev > 0 ? (d.cashflowRev / d.totalRev) * 100 : 0;
+      const auaShare = d.totalRev > 0 ? (d.auaRev / d.totalRev) * 100 : 0;
+      const bulkShare = d.totalRev > 0 ? (d.bulkRev / d.totalRev) * 100 : 0;
       revHTML += `
         <div class="chart-bar-row">
           <div class="chart-bar-year">Year ${d.year}</div>
           <div class="chart-bar-track">
-            <div style="position:absolute;top:0;left:0;height:100%;width:${cfPct + auaPct}%;display:flex;border-radius:4px;overflow:hidden;">
-              <div style="width:${cfPct > 0 ? (d.cashflowRev/(d.cashflowRev+d.auaRev))*100 : 0}%;background:var(--cw-pistachio);"></div>
-              <div style="flex:1;background:var(--cw-sand);"></div>
+            <div style="position:absolute;top:0;left:0;height:100%;width:${totalPct}%;display:flex;border-radius:4px;overflow:hidden;">
+              <div style="width:${cfShare}%;background:var(--cw-pistachio);"></div>
+              <div style="width:${auaShare}%;background:var(--cw-sand);"></div>
+              <div style="width:${bulkShare}%;background:var(--cw-lilac);"></div>
             </div>
           </div>
           <div class="chart-bar-value" style="width: 100px;">
@@ -1515,7 +1542,7 @@
         </div>`;
     });
     revHTML += '<div style="font-size: 12px; color: var(--cw-cloud-d3); margin-top: 12px;">' +
-      'CF: ' + formatCurrency(y10.cashflowRev) + '/yr + AUA: ' + formatCurrency(y10.auaRev) + '/yr</div>';
+      'CF: ' + formatCurrency(y10.cashflowRev) + ' + AUA: ' + formatCurrency(y10.auaRev) + ' + Bulk: ' + formatCurrency(y10.bulkRev) + '</div>';
     document.getElementById('chartBarsRev').innerHTML = revHTML;
   }
 
