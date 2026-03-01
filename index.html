@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Common Wealth — Advisor Boot Camp</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    /* ── CW Brand Palette (from brand-guidelines.md) ── */
+    --cw-emerald: #00ce7c;
+    --cw-emerald-light: #00eaa8;
+    --cw-emerald-dark: #018c5a;
+    --cw-spruce: #014751;
+    --cw-spruce-light: #027985;
+    --cw-spruce-dark: #002329;
+    --cw-pistachio: #BAEE95;
+    --cw-pistachio-light: #eeffd9;
+    --cw-sand: #c2b26e;
+    --cw-plum: #331f40;
+    --cw-plum-light: #5b3a6d;
+    --cw-lilac: #c5b6f1;
+    --cw-chartreuse: #c6d92f;
+    --cw-cloud: #fcfcf7;
+    --cw-cloud-d1: #dbdbd7;
+    --cw-cloud-d2: #bbbbb7;
+    --cw-cloud-d3: #9c9c99;
+    --cw-cloud-d4: #7e7e7c;
+    /* Semantic aliases */
+    --cw-green: var(--cw-emerald);
+    --cw-dark: var(--cw-spruce);
+    --cw-white: var(--cw-cloud);
+    --cw-gray-200: var(--cw-cloud-d1);
+    --cw-gray-300: var(--cw-cloud-d2);
+    --cw-gray-600: var(--cw-cloud-d3);
+    --cw-gray-800: var(--cw-cloud-d4);
+    --cw-orange: #FF8A50;
+    --slide-transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cw-spruce);
+    color: var(--cw-cloud);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ─── Top Navigation Bar ─── */
+  .top-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(1, 71, 81, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 206, 124, 0.15);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 60px;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 20px; font-weight: 600; letter-spacing: -0.5px;
+    color: var(--cw-cloud); text-decoration: none;
+  }
+  .logo img { height: 28px; width: auto; }
+  .logo .mm { color: var(--cw-emerald); }
+
+  .section-tabs {
+    display: flex; gap: 4px; background: rgba(252,252,247,0.06);
+    border-radius: 10px; padding: 4px;
+  }
+  .section-tab {
+    padding: 8px 20px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; font-weight: 500; color: var(--cw-cloud-d2);
+    transition: all 0.3s; border: none; background: none;
+    white-space: nowrap;
+  }
+  .section-tab:hover { color: var(--cw-cloud); background: rgba(252,252,247,0.06); }
+  .section-tab.active {
+    background: var(--cw-emerald); color: var(--cw-spruce);
+    font-weight: 600;
+  }
+
+  .slide-counter {
+    font-size: 13px; color: var(--cw-cloud-d2); font-variant-numeric: tabular-nums;
+    min-width: 80px; text-align: right;
+  }
+
+  /* ─── Slide Container ─── */
+  .slide-container {
+    position: fixed; top: 60px; bottom: 0; left: 0; right: 0;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: none; align-items: center; justify-content: center;
+    padding: 40px 60px;
+    opacity: 0;
+    pointer-events: none;
+    overflow-y: auto;
+  }
+  .slide.active {
+    display: flex;
+    opacity: 1; transform: translateX(0); pointer-events: all;
+    animation: slideIn 0.4s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInReverse {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .slide-inner {
+    max-width: 1200px; width: 100%;
+  }
+
+  /* ─── Slide Typography ─── */
+  .slide h1 {
+    font-size: 48px; font-weight: 600; line-height: 1.1;
+    letter-spacing: -1.5px; margin-bottom: 24px;
+  }
+  .slide h2 {
+    font-size: 36px; font-weight: 600; line-height: 1.2;
+    letter-spacing: -1px; margin-bottom: 20px;
+  }
+  .slide h3 {
+    font-size: 22px; font-weight: 600; margin-bottom: 16px;
+    color: var(--cw-emerald);
+  }
+  .slide p {
+    font-size: 18px; line-height: 1.7; color: var(--cw-cloud-d1);
+    max-width: 800px;
+  }
+  .slide .subtitle {
+    font-size: 20px; color: var(--cw-emerald); font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .accent { color: var(--cw-emerald); }
+  .accent-pistachio { color: var(--cw-pistachio); }
+
+  /* ─── Card Grids ─── */
+  .card-grid {
+    display: grid; gap: 20px; margin-top: 32px;
+  }
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: rgba(252,252,247,0.04);
+    border: 1px solid rgba(252,252,247,0.08);
+    border-radius: 16px; padding: 28px;
+    transition: all 0.3s;
+  }
+  .card:hover {
+    background: rgba(252,252,247,0.07);
+    border-color: rgba(0, 206, 124, 0.2);
+    transform: translateY(-2px);
+  }
+  .card h4 {
+    font-size: 16px; font-weight: 600; margin-bottom: 10px;
+    color: var(--cw-cloud);
+  }
+  .card p { font-size: 15px; line-height: 1.6; color: var(--cw-cloud-d2); }
+  .card .big-number {
+    font-size: 42px; font-weight: 300; color: var(--cw-emerald);
+    line-height: 1; margin-bottom: 8px; letter-spacing: -1px;
+  }
+  .card .stat-label {
+    font-size: 14px; color: var(--cw-cloud-d2); font-weight: 400;
+  }
+
+  /* ─── SVG Donut Charts ─── */
+  .donut-row { display: flex; gap: 40px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+  .donut-item { text-align: center; }
+  .donut-item svg { width: 150px; height: 150px; transform: rotate(-90deg); }
+  .donut-item .donut-label { margin-top: 12px; font-size: 14px; font-weight: 400; color: var(--cw-cloud-d2); }
+  .donut-item .donut-value { font-size: 13px; font-weight: 600; color: var(--cw-emerald); }
+  .donut-ring { fill: none; stroke: rgba(252,252,247,0.08); }
+  .donut-segment { fill: none; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease; }
+
+  /* ─── Pillar Diagram ─── */
+  .pillar-row {
+    display: flex; gap: 16px; margin-top: 32px; align-items: flex-end;
+    justify-content: center;
+  }
+  .pillar {
+    text-align: center; border-radius: 12px 12px 0 0; padding: 24px 20px;
+    min-width: 180px; transition: all 0.3s; cursor: default;
+  }
+  .pillar:hover { transform: translateY(-4px); }
+  .pillar.p1 { background: var(--cw-spruce-light); height: 260px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .pillar.p2 { background: var(--cw-emerald-dark); height: 220px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .pillar.p3 { background: var(--cw-emerald); height: 280px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .pillar .pillar-num { font-size: 36px; font-weight: 600; color: var(--cw-cloud); }
+  .pillar .pillar-title { font-size: 15px; font-weight: 600; margin-top: 8px; }
+  .pillar .pillar-desc { font-size: 13px; color: rgba(252,252,247,0.7); margin-top: 6px; line-height: 1.4; }
+  .pillar.p3 .pillar-num, .pillar.p3 .pillar-title { color: var(--cw-spruce); }
+  .pillar.p3 .pillar-desc { color: rgba(1,71,81,0.7); }
+
+  /* ─── Stat Bars ─── */
+  .stat-bar-group { margin-top: 28px; }
+  .stat-bar-item { margin-bottom: 20px; }
+  .stat-bar-label {
+    display: flex; justify-content: space-between; margin-bottom: 6px;
+    font-size: 15px; font-weight: 400;
+  }
+  .stat-bar-label span:last-child { color: var(--cw-emerald); font-weight: 600; }
+  .stat-bar {
+    height: 12px; background: rgba(252,252,247,0.08);
+    border-radius: 6px; overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--cw-emerald), var(--cw-emerald-light));
+    border-radius: 6px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0;
+  }
+  .slide.active .stat-bar-fill { width: var(--bar-width); }
+
+  /* ─── Split Layout ─── */
+  .split { display: flex; gap: 48px; align-items: flex-start; }
+  .split-left { flex: 1; }
+  .split-right { flex: 1; }
+
+  /* ─── Plan Type Table (brand: no vertical lines, minimal) ─── */
+  .plan-table {
+    width: 100%; border-collapse: collapse;
+    margin-top: 24px; font-size: 15px;
+  }
+  .plan-table th {
+    padding: 14px 20px;
+    text-align: left; font-weight: 600; font-size: 14px;
+    color: var(--cw-emerald); border-bottom: 2px solid rgba(0,206,124,0.3);
+  }
+  .plan-table td {
+    padding: 14px 20px; border-bottom: 1px solid rgba(252,252,247,0.06);
+    color: var(--cw-cloud-d1);
+  }
+  .plan-table tr:hover td { background: rgba(252,252,247,0.03); }
+  .plan-table .plan-name { font-weight: 600; color: var(--cw-cloud); }
+
+  /* ─── Calculator ─── */
+  .calculator {
+    background: rgba(252,252,247,0.04);
+    border: 1px solid rgba(252,252,247,0.1);
+    border-radius: 20px; padding: 36px;
+    margin-top: 24px;
+  }
+  .calc-inputs {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;
+    margin-bottom: 32px;
+  }
+  .calc-field label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--cw-cloud-d2); margin-bottom: 8px; text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .calc-field input, .calc-field select {
+    width: 100%; padding: 12px 14px; border-radius: 10px;
+    border: 1px solid rgba(252,252,247,0.12);
+    background: rgba(252,252,247,0.06);
+    color: var(--cw-cloud); font-size: 15px; font-family: inherit;
+    font-weight: 500; transition: all 0.2s;
+  }
+  .calc-field input:focus, .calc-field select:focus {
+    outline: none; border-color: var(--cw-emerald);
+    box-shadow: 0 0 0 3px rgba(0, 206, 124, 0.15);
+  }
+  .calc-field input::placeholder { color: var(--cw-cloud-d3); }
+  .calc-field .input-hint {
+    font-size: 11px; color: var(--cw-cloud-d3); margin-top: 4px;
+  }
+  .calc-field input[type="range"] {
+    -webkit-appearance: none; height: 6px; border-radius: 3px;
+    background: rgba(252,252,247,0.12); padding: 0; border: none;
+    cursor: pointer;
+  }
+  .calc-field input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--cw-emerald); cursor: pointer; border: 2px solid var(--cw-spruce);
+  }
+  .slider-row {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .slider-row input[type="range"] { flex: 1; }
+  .slider-value {
+    font-size: 16px; font-weight: 600; color: var(--cw-emerald);
+    min-width: 48px; text-align: right;
+  }
+
+  .calc-results {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;
+  }
+  .calc-result-card {
+    background: rgba(0, 206, 124, 0.06);
+    border: 1px solid rgba(0, 206, 124, 0.15);
+    border-radius: 14px; padding: 20px; text-align: center;
+  }
+  .calc-result-card .result-value {
+    font-size: 32px; font-weight: 300; color: var(--cw-emerald);
+    letter-spacing: -1px;
+  }
+  .calc-result-card .result-label {
+    font-size: 12px; color: var(--cw-cloud-d2); margin-top: 6px;
+    font-weight: 500;
+  }
+  .calc-result-card.highlight {
+    background: rgba(0, 206, 124, 0.12);
+    border-color: var(--cw-emerald);
+  }
+
+  .calc-chart {
+    margin-top: 32px; padding: 24px;
+    background: rgba(252,252,247,0.03);
+    border-radius: 14px;
+  }
+  .chart-bar-row {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 12px;
+  }
+  .chart-bar-year {
+    font-size: 14px; font-weight: 600; width: 60px; text-align: right;
+    color: var(--cw-cloud-d2);
+  }
+  .chart-bar-track {
+    flex: 1; height: 32px; background: rgba(252,252,247,0.04);
+    border-radius: 8px; overflow: hidden; position: relative;
+  }
+  .chart-bar-fill-aum {
+    position: absolute; top: 0; left: 0; height: 50%;
+    background: var(--cw-emerald);
+    border-radius: 4px 4px 0 0; transition: width 0.8s ease;
+  }
+  .chart-bar-fill-rev {
+    position: absolute; bottom: 0; left: 0; height: 50%;
+    background: var(--cw-pistachio);
+    border-radius: 0 0 4px 4px; transition: width 0.8s ease;
+  }
+  .chart-bar-value {
+    font-size: 13px; font-weight: 600; width: 200px;
+    color: var(--cw-cloud-d1); display: flex; gap: 12px;
+  }
+  .chart-bar-value .aum-val { color: var(--cw-emerald); }
+  .chart-bar-value .rev-val { color: var(--cw-pistachio); }
+
+  /* ─── Navigation arrows ─── */
+  .nav-arrows {
+    position: fixed; bottom: 32px; right: 32px; display: flex; gap: 8px; z-index: 100;
+  }
+  .nav-btn {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(252,252,247,0.08); border: 1px solid rgba(252,252,247,0.12);
+    color: var(--cw-cloud); font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: var(--cw-emerald); color: var(--cw-spruce);
+    border-color: var(--cw-emerald);
+  }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* ─── Progress Bar ─── */
+  .progress-bar {
+    position: fixed; top: 60px; left: 0; right: 0; height: 3px;
+    background: rgba(252,252,247,0.05); z-index: 99;
+  }
+  .progress-fill {
+    height: 100%; background: var(--cw-emerald);
+    transition: width 0.4s ease;
+  }
+
+  /* ─── Slide-specific: Title Slide ─── */
+  .title-slide {
+    text-align: center;
+  }
+  .title-slide h1 { font-size: 64px; letter-spacing: -2px; font-weight: 600; }
+  .title-slide .tagline {
+    font-size: 24px; color: var(--cw-emerald); font-weight: 500;
+    margin-bottom: 40px;
+  }
+  .title-slide .meta {
+    font-size: 15px; color: var(--cw-cloud-d3); margin-top: 32px;
+  }
+
+  /* ─── Wave decoration ─── */
+  .wave-decoration {
+    position: absolute; bottom: -20px; right: -20px; opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* ─── Quote / Callout ─── */
+  .callout {
+    background: rgba(0, 206, 124, 0.06);
+    border-left: 4px solid var(--cw-emerald);
+    border-radius: 0 12px 12px 0;
+    padding: 24px 28px; margin-top: 24px;
+  }
+  .callout p { font-size: 17px; color: var(--cw-cloud-d1); font-style: italic; }
+  .callout .callout-source { font-style: normal; font-size: 13px; color: var(--cw-cloud-d3); margin-top: 8px; }
+
+  /* ─── Icon badges ─── */
+  .icon-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(0, 206, 124, 0.1); margin-bottom: 16px;
+    font-size: 24px;
+  }
+
+  /* ─── List styling ─── */
+  .feature-list { list-style: none; margin-top: 16px; }
+  .feature-list li {
+    padding: 10px 0; font-size: 16px; color: var(--cw-cloud-d1);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .feature-list li::before {
+    content: '→'; color: var(--cw-emerald); font-weight: 700;
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* ─── Section placeholder ─── */
+  .section-placeholder {
+    text-align: center; padding: 80px 40px;
+  }
+  .section-placeholder .placeholder-icon {
+    font-size: 64px; margin-bottom: 24px; opacity: 0.6;
+  }
+  .section-placeholder h2 { color: var(--cw-cloud-d2); }
+  .section-placeholder p { color: var(--cw-cloud-d3); max-width: 500px; margin: 16px auto 0; }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 900px) {
+    .slide { padding: 24px 20px; }
+    .slide h1 { font-size: 32px; }
+    .slide h2 { font-size: 26px; }
+    .card-grid.cols-3, .card-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .calc-inputs { grid-template-columns: 1fr; }
+    .calc-results { grid-template-columns: 1fr 1fr; }
+    .split { flex-direction: column; gap: 24px; }
+    .pillar-row { flex-direction: column; align-items: stretch; }
+    .pillar { height: auto !important; }
+    .title-slide h1 { font-size: 36px; }
+    .section-tabs { display: none; }
+  }
+
+  /* Keyboard hint */
+  .kb-hint {
+    position: fixed; bottom: 32px; left: 32px; font-size: 12px;
+    color: var(--cw-cloud-d3); z-index: 100;
+  }
+  .kb-hint kbd {
+    background: rgba(252,252,247,0.08); padding: 2px 8px;
+    border-radius: 4px; font-family: inherit; font-size: 11px;
+    border: 1px solid rgba(252,252,247,0.1);
+  }
+
+  /* ─── Inline SVG mini-charts ─── */
+  .mini-chart { display: inline-block; vertical-align: middle; }
+
+  /* ─── Presenter headshots ─── */
+  .presenters {
+    display: flex; gap: 60px; justify-content: center; align-items: flex-start; margin-top: 40px;
+  }
+  .presenter {
+    text-align: center; flex: 0 0 140px;
+  }
+  .presenter-photo {
+    width: 90px; height: 90px; border-radius: 50%;
+    border: 3px solid var(--cw-emerald);
+    background: var(--cw-spruce-light); color: var(--cw-cloud);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 600; margin: 0 auto 10px;
+    overflow: hidden;
+  }
+  .presenter-photo img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+  }
+  .presenter-name { font-size: 14px; font-weight: 600; color: var(--cw-cloud); }
+  .presenter-role { font-size: 12px; color: var(--cw-cloud-d2); }
+</style>
+</head>
+<body>
+
+<!-- ─── Top Navigation ─── -->
+<nav class="top-nav">
+  <div class="logo"><svg height="24" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 540 60"><defs><style>      .cls-1 {        fill: #65d1a6;      }      .cls-1, .cls-2 {        stroke-width: 0px;      }      .cls-2 {        fill: #fff;      }    </style></defs><g><path class="cls-2" d="M11,38.2c0,7,4.6,11,10,11s8.1-3.6,8.9-6.6l9.3,3.1c-1.7,6.5-7.8,13.1-18.2,13.1S.5,50.1.5,38.1s8.9-20.7,20.2-20.7,16.6,6.6,18.3,13.1l-9.4,3.2c-1-3.2-3.4-6.6-8.6-6.6-5.5.2-10,4.1-10,11.1Z"></path><path class="cls-2" d="M81.3,38.2c0,12-8.8,20.7-20.4,20.7s-20.4-8.7-20.4-20.7,8.8-20.7,20.4-20.7c11.6,0,20.4,8.7,20.4,20.7ZM70.7,38.2c0-7.4-4.7-11.1-9.9-11.1s-9.8,3.8-9.8,11.1,4.7,11.1,9.9,11.1,9.8-3.7,9.8-11.1Z"></path><path class="cls-2" d="M255.4,38.2c0,12-8.8,20.7-20.4,20.7s-20.4-8.7-20.4-20.7,8.8-20.7,20.4-20.7c11.6,0,20.4,8.7,20.4,20.7ZM244.9,38.2c0-7.4-4.7-11.1-9.9-11.1s-9.9,3.7-9.9,11.1,4.7,11.1,9.9,11.1,9.9-3.7,9.9-11.1Z"></path><path class="cls-2" d="M271.1,57.7h-10.5V18.7h10.2v4.8c2.4-4,7-5.9,11.2-5.9,9.7,0,14.1,6.9,14.1,15.4v24.5h-10.5v-22.5c0-4.4-2.1-7.8-7.2-7.8s-7.3,3.6-7.3,8.1v22.4h0Z"></path></g><g><g><path class="cls-1" d="M352.2,18.7l8.4,25.1,7.2-25.1h10.4l-12.2,38.9h-10.5l-9.1-26.6-8.9,26.6h-10.7l-12.4-38.9h11.1l7.2,25,8.5-25s11,0,11,0Z"></path><path class="cls-1" d="M415.5,46.5c-2,6.7-8.2,12.3-17.7,12.3s-20.1-7.7-20.1-20.8,9.2-20.5,19.2-20.5,19.2,7.7,19.2,20.2-.2,3.1-.2,3.2h-27.9c.2,5.1,4.6,8.9,9.8,8.9s7.6-2.5,8.9-5.9l8.8,2.6ZM405.7,33.8c-.2-3.9-2.7-7.7-8.7-7.7s-8.5,4.1-8.7,7.7h17.4Z"></path><path class="cls-1" d="M430.5,35.3l9.6-1.4c2.2-.3,2.9-1.4,2.9-2.8,0-2.8-2.1-5.1-6.6-5.1s-7.1,2.9-7.4,6.3l-9.3-2c.6-6.1,6.3-12.8,16.7-12.8s16.9,7,16.9,14.8v19.2c0,2.1.2,4.8.5,6.2h-9.7c-.2-1-.4-3.2-.4-4.7-2,3.1-5.7,5.8-11.5,5.8-8.3,0-13.4-5.6-13.4-11.7,0-7,5.2-10.9,11.7-11.8ZM443,41.9v-1.7l-8.8,1.3c-2.7.4-4.8,1.9-4.8,4.9s1.7,4.5,5.1,4.5c4.4.1,8.5-2.1,8.5-9Z"></path><path class="cls-1" d="M460.7,57.7V.4h10.5v57.3s-10.5,0-10.5,0Z"></path><path class="cls-1" d="M492.3,18.7h7.8v9.3h-7.8v16.3c0,3.4,1.6,4.5,4.6,4.5s2.7-.2,3.2-.3v8.8c-1,.4-2.8.9-5.9.9-7.6,0-12.3-4.5-12.3-12v-18.1h-7v-9.3h2c4.1,0,6-2.7,6-6.2v-5.5h9.5v11.6h-.1Z"></path><path class="cls-1" d="M514.5,57.7h-10.5V.4h10.5v21.6c2.5-3,6.8-4.3,10.5-4.3,9.9,0,14.5,6.9,14.5,15.4v24.5h-10.5v-22.6c0-4.4-2.1-7.8-7.2-7.8s-7,3.3-7.3,7.6v22.9Z"></path></g><path class="cls-1" d="M84.9,59.5c8,0,10.3-10.2,12.8-20.9.7-3.2,1.8-7.9,2.9-10.9,1.1,3,2.2,7.7,2.9,10.9,2.5,10.8,4.8,20.9,12.8,20.9s10.3-10.2,12.8-20.9c.7-3.2,1.8-7.9,2.9-10.9,1.1,3,2.2,7.7,2.9,10.9,2.5,10.8,4.8,20.9,12.8,20.9s10.3-10.2,12.8-20.9c.7-3.2,1.8-7.9,2.9-10.9,1.1,3,2.2,7.7,2.9,10.9,2.5,10.8,4.8,20.9,12.8,20.9s10.3-10.2,12.8-20.9c.7-3.2,1.8-7.9,2.9-10.9,1.1,3,2.2,7.7,2.9,10.9,2.5,10.8,4.8,20.9,12.8,20.9h1.3v-9.7c-1.5-1.4-3.2-9-4.3-13.5-2.5-10.8-4.8-20.9-12.8-20.9s-10.3,10.2-12.8,20.9c-.7,3.2-1.8,7.9-2.9,10.9-1.1-3-2.2-7.7-2.9-10.9-2.5-10.8-4.8-20.9-12.8-20.9s-10.3,10.2-12.8,20.9c-.7,3.2-1.8,7.9-2.9,10.9-1.1-3-2.2-7.7-2.9-10.9-2.5-10.8-4.8-20.9-12.8-20.9s-10.3,10.2-12.8,20.9c-.7,3.2-1.8,7.9-2.9,10.9-1.1-3-2.2-7.7-2.9-10.9-2.5-10.8-4.8-20.9-12.8-20.9s-10.2,10.1-12.7,20.9c-1,4.5-2.8,12.1-4.3,13.5v9.7h1.4Z"></path></g></svg></div>
+  <div class="section-tabs">
+    <button class="section-tab active" onclick="goToSection(0)">Group Retirement 101</button>
+    <button class="section-tab" onclick="goToSection(1)">Sales & Set-Up</button>
+    <button class="section-tab" onclick="goToSection(2)">Post-Implementation</button>
+  </div>
+  <div class="slide-counter" id="slideCounter">1 / 17</div>
+</nav>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ─── Slide Container ─── -->
+<div class="slide-container" id="slideContainer">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 1: GROUP RETIREMENT 101                 -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<!-- Slide 0: Title -->
+<div class="slide active" data-section="0">
+  <div class="slide-inner title-slide">
+    <svg width="120" height="50" viewBox="0 0 120 50" style="margin-bottom: 16px; opacity: 0.5;">
+      <path d="M5 40 Q15 10 25 25 Q35 40 45 15 Q55 -5 65 25 Q75 50 85 15 Q95 -10 105 25 Q110 35 115 30" fill="none" stroke="#00ce7c" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <div class="tagline">Advisor Boot Camp 2026</div>
+    <h1>Group Retirement <span class="accent">Boot Camp</span></h1>
+    <p style="margin: 24px auto 0; max-width: 600px;">A comprehensive training program for advisors on Canada's group retirement market — from fundamentals to sales to long-term client success.</p>
+    <div class="presenters">
+      <div class="presenter">
+        <div class="presenter-photo"><img src="data:image/jpeg;base64,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" alt="Alex Mazer"></div>
+        <div class="presenter-name">Alex Mazer</div>
+        <div class="presenter-role">CEO & Co-Founder</div>
+      </div>
+      <div class="presenter">
+        <div class="presenter-photo"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADIAMgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD7LooooAKKKKACiiuB+K/xZ8KfDu2K6pdG51N03Q6dbkNM/oW7Iv8AtN+Gaai5OyInONOPNJ2R3xIFeXfET47eAPB0klo+otq2oJkG107EhU+jvnYv0zn2r5p8f/Fn4hfEZ5LcXJ0TRH4FraOUV1/23+9J9OF9q5nS/DtlEoZkE7r3ccD6DpVT9nS+N69kcf1itWdqMbLu/wBEel+Jv2kPiD4ikeDwlpNrotsSQJSonmA92cBB+CmvOtd/4TjxM5l8S+J72+J58uW4Z1H0XhR+Ard0yFd2zaNq9q0/JQfwiuKrmMlpTSX5lfUedXqycvwR5bNoQiBz5jMPUgUlnpRll2GINz3NegX1hAHzJKiFvugnn8qtadolnGPMuJXYnkKmRn8cVxPF15PWbOmjlsJaRgjmtP8ADFrIgzZxs2cEHNa9n4M0uc+XNpeD6h2X+tbn9l3cDfaLS2jaPGV8+aQ8fgoFIZ9XIJl04njINrKdw98Y5/CrjiaqfxP7zteUUuXVL7irH8KdGu4/kW+gYj7yTbgPwYUWnwy8X6FMbnwh4tuLSUHIUSPbk/ipIP4itjQPEOobGSK6hm2HBguXMbMfQN2PsTXVaT4vtDMLeZXsrgHH2e5PLf7rdDXoUsbO2svvPPrZRTTvb7jnrD4v/GnwLhfFGmxa9YJwZZYhnH/XWLp/wIGvVvh9+0Z4C8TSR2mpSy+Hb1yAFvSPIZvRZRx/31trHS8tLuJ5YpDj7sisMFT6EV5p4y8EaHqsskotFtbhif3tuAhP1HQ/lWzxFN/EvuOb2WIpP93K/k/8z7FgliniSWGRJI3G5GRshh6gjqKkr4U8K+JviP8ACy436HfyX+kK26SzmBkgI75TOUP+0hr6U+EHxz8LePTFp07DR9cbAFlPICsx/wCmT8B/93hvY9arkvHmg7o0pYuMpck1yy7P9D1eijNFZnYFFFFABRRRQAUUUUAFBOBQTivl79on4yX2sanL8PPh7M8hdjDqF/bty56NFGw6KOdz/gO5q4QcmY168aMbv/hzW+PH7QI0uefwt4AZLzVMmKfUFAeOBuhWIdHf3+6Pc9PBdP8AC2o39xJq2vTTX17Oxkk81i5Zj3dj94/pXS+CfAselyxm4AluWHzuBwP9lfb+der2nh+P7KB5fb+7UyxC5eWl9/c5qeHlVlz1/kuiPGzaCMYkGMdAAKlgMUaHYvWuu8U6L5IdlTBFcCZHScxr1z0rza8raHbsbGnAMzNjGeKq6x4itbWQ2tognuU4kPUJ/ifaqmr6idOsPKWdUuphhVH3gPX2+tc1FdWOnRbpZEEr85K8k+pzzXI1pc7sNSUlzSN2KXXL12lkU20eQOF/eMPX0Ue5/KrlnZ3c0gDarbQKT1Rt7MPdjXIP4ss7KZWnEu4HIZiW/LP8q3NE+IPhA3AN/bGJzwZFgwT9VHBFDjNapHpRcNjstN03WCu6O5t7hB94SXg59gCMfhkVX1y81bRysh0nWbZc5Dwok0R98K1Sjx14Kms/JtZi0g5AgXBA7ZRiD+Wa4/VPEsKSmS0u5MZOBIowfYMvT/gSkVpS5t2KrboXJvEdrqkxi1BDbzoNvmovGP8AaBGVHscj0Iq7/b9pIseia4kcwePdbSsMbwOuD1yD6E468isGCd/EAjhubcu6nMUyfLLGR6HuPbkfh01l8BX+q2ITn/R382DC42v7emfyrV2MVFy0ResdfuNNuYporsyIh2MJWySv9x/Ueh7Zr0e6v9Ov/Dz39meUA3AckE9Pzr5t1yDXvDuoCDUkYW7ZUk+nbHuDVzwvr15A8XlSyuUmGEDEiRc5xjpjPNXe8TkqUVzHtzYuZEt1H71xlwP4fWuJ8beB7ZmN3p7i0uwd3A2qxHPOPun3Fdj8PZZrmKe+uMGd3xJz9wDoPrXQapYG9jwYxzSpTlSfNF6nn4mhCp7skZ3wS/aA1DRLuLwr8SZJHgBCQ6q/MkPoJv76/wC31HfPUfVMEsVxBHPBIksUih0dGDKykZBBHBBHeviPxd4UgvUMDoVkUfu5AOU/xHtWx8B/i1qfw21lPB/jCV5fDsjYhmOWNlk/eX1iJ6r/AA9R3B9GlVhiVeOkuq/yOGFWeHlyVXePR/oz7IzRTLeWKeBJ4JElikUMjowKspGQQR1BFPoPSQUUUUAFFFcN8b/H1t8PPAt1rLGOS/k/cafA3/LWYg4z/sr94+wx3ppOTsiZzUIuUtkeaftS/FW50zHw+8IyyPrl8oW8kgPzwI/SJfSRwf8AgK89xjiPBfhCw8F6BmVo59WuFzcSryF9I1/2R69zz6Vx3wtgluNYuvFmtTPdapeO8iSy8tlj80n+83IHoPrXc6rfb0bCge+ayxk/d9lH5nJho+0l7epv0XZGj4dk+03Ss6BTnpXpFpb/AOjLxXmngthJcBu1eq20gFuABzXPSi7WOu9zgPGlswRyF49a8qazRJLi8lJWGAF3OOwr2nxhNGbaQOcZFeU+Jod/hq/RGCRBGMh3hfl+v1xWNWi73KhG8lc8m1nU1ubiS8meJRI37oDBZVHv0Fc/c6jbbmEc7Qt3fZ5jsfqf/wBVN1khpSs07ylQAAi4xx0z6/Sp/Cvhi71jU47aC3d1Y8krgD61npFXZ60U72RFptvHdzfvAbnPJd8sw/liu20XQ7loUaw0m2Ck9ZU3E16v4F+EtrBCk12oLADAwBXp+ieF9N04KFt1YgcZHArlnXcnZHfTw0Yq8mfPbeCdb1UILi2hjjHRY4FXHvkDNaFj8LL/AO0oZlIBI4PcetfTtultHEB5USnHZBVW+EbPuRFz64rb3ktxRjGUrNHFeDvh/ptpHGzxRs68jI6Gu7t9HsbWEKsKEEYPFZ6zNF93j6cVYTUiR5bAnPeuilVi1ZoyqUJJ3TOW+IXgrRvEOmywTW6rIVIDgYIPY1852vg66sL66sUEtvcxOQWXDEgHqCeRmvrO+bNvvxXivxPa2i1f7TFhJv4mBwT/AI0nZOyMppuN2V/hda29lC1nJcM0pkLlG4Ofoe9ejqU29Oa8Ct/E1wmpxLGyySI26NzwV+p9K9VtteZ4I5GzkqDmsK0nHVHk4mPK7mze6fFOzMwFcL498KWep2MkbjZKvzRSY5Rv8PUV1Sa6rDlvzrF8R6xEYmAPOK4VWnTmpR3OGpGNSLT2ZZ/Zb+KV1oGsr8N/Fc5S1aTy9MnkbIhkPSEn+438PoeOhGPq3NfnV4whN3MbqI/vY+QV4LAe9fXP7MPxL/4Tvwb9h1Sffr2kqsV0WPzTx9Em+pxhv9oe4r6enVWJp+1W/X1MMLUdKfsJfJ/p8j12ijNFM9EDwK+FP2jPHI8e/E6WCCYvouku1raYOVfB/eyf8CYYB/uqK+pP2j/GLeDPhXqV5bSbL+8H2Kz55EkgILD/AHVDN9QK+EtGiUnjrnA+lXz+ypufXZHFWXt60aHTd/5HpPhS8MqqsJwFXA+ldHNHNLGQzGsj4cWCMDuXJGO9d+bCJVyEFebBubPSdJJGR4Sle1kOckA85ruP+EjjgtwHkIxXIWEKrcSAetTatD+5NdkY2RjY5nxp42SaeWCFtxHFedeKPEF2vh66jwG81grA+lWtdQLrVwPeud8WQu+nB0PEThmXH3qmp8LNKa95HMW8/mSLNyzFsZIxt9wK94+BtnCt35jhBtGFHUn1NeCi4cCNiiLHu5YDBHPSvePgdKLrUJHhbKkjt27CvMxGkD18NrNH0NZqAqjHaryxZ6VX06Isqj2rXhh2AE1hCB2ymMhsjImc4/Cq9zZ4YANmtSOQKMcU12VmyV4rqUU0c6nK5knTt2Cw49akGkwCMsD8wrQllVYjtHQcVlvdMpLPJtX1NEVFPYblOS3KGuwy/YXSMdB2rwH4zb4IIpW3Z3Yz9a+g7vXdFQeQ92skrDlUG4ivGv2htKW58LS6hZESLCysdvOBnBqpR1ujNyvFpnzteSubgmB2XjBXP8q9f0S9kn0O0kbIYxDqea8i0e3W/wBZkE21IEYb3PYZAyK9fW0ayiW3yMIoAwe3aprRTVmeRi0+W72JWnkAyGxWBrV1KScua3lRmj4ArE1u2Izwea86XLfQ81O5zk8277xzVz4ZeLrj4e/ESw8R25Y2oby7yJf+WkDffX6j7w91FZV8DGzCs24AlRhzkcj616GX1vZVLPZ6MwxMHKPNHdao/S2wure+soLy0lWa3njWSKRTkOrDII9iDRXif7G3i8658OZPD1zLuvNCkEK5PJt3y0f5Hcv0UUV7E4uMmjvoVVVpqa6nln7cHihr7xvp3hmGQmHSbXz5l7edLyPyQL/31Xh/huTdNk+ta3xS1c+KfiJ4g1ovvju7+RoznP7sHag/75UVlaJGIpmHpTxUfdUF0OfASUpTq93+CPYvhqTlgTXoTAeXXlvw8u9jPnOeK9GS5BQZNcMKdmetOasVrIf6bKKs6mpMRqtYHdfSetaF5Gzxmuroc63PDvFSOmvT88VVtdOudYlTTbSISzzHCKfbnOe3Heuh8U6bIdamYYbpxXVfDLw5NbX6akyZbY6jcOm5cf1rNxc4tRNqaSnHm0TZ4d4h0C/0+Xypgki5OGQZyfQ161+zOu+9uYApGwA7SORXRaj4JTUoJ2khSGaEbCr85PXII7Yq/wDALwyNJvtRuyHCthEJ/i55/LFeTOopx5Xue68M6NS8dj1HVNTk0mINFbmV9ufbFYdn4t8SX4l/s+3wRynmx7VP49vxrp9XhkliDR25lYDC5OBXnWt+A/EmvCVb3xAbWCQgLbwrtVBn1B+b+VOD1sJ2cbmpbeM/F9reLHqehxz7zgmCVTt59jXdaLqUuoHbNavbNjJVj0ryzR/hxL4etpbe01R5Y5JN53p5jAemW7V6N4NtbmOVmlllePA27xjn29q0ekrISinC73LPie7fSbXz5BtjzgNjjPbNeO+M9ZubrzLm/wBanisIQN0dinzHJAxk8dx9K+gfE+l22r+H7rTrhcpPCVJ7g44P4V4zo3heHTZfJutNtXdAEZjHneB0NaSg4silJTi+5xGk+KPDP2KSOLQ9dgCPtkmlbfKzHnkLz/QV6BZWFjrWgz2eQ9vd2xTkYYAjvW5aaJYLJvgsII26nYlatrpaW67ktEiB5JXj9Kq13eOxnLRcrep8d/2LqGk6hcWs6yMLWcq+0DkBsDPt0rvri4MkqbuqoqsR3IABrrvFGjKPiDIkVoxhvYi8sm35VfOAM+vGcUlr4PbLM2SScnjrXPXqxgm5HDmK5aMYLq7lLRdNM8YY9PTFJ4h0ZBbkkA8V2mmaYbWLaaw/Fs4SFlEfQYzXzUqspT0PK5ElqeJ6/ZvHM3yHFc7KDHLXZ+IJN0jcd646+++2PWvdoqTirmVmek/sseJD4c+M2n27yFbXWFawlGeNzfNGf++1A/4EaK8ssry4sNSt7+2cpcW0qTRMOqspDA/mBRX09Om61KM+tjhp4tYRypyXW/3kljEDE7tj72K19Ds2muSVXIPHPeoNH0q4ureOSMHazEdPevVfh/4TO5GkXmlVd6jO7Bx5aEbdhng7SSkxVYyCwHNdw2nyRjAyeO9djoHh+GEqTGM49K2pNHiYf6sflWUkjqSZ5xpNk63ZJUnmuttdK8yHmDPvit600aFJQRGK6G1tESIYUCs3qaQ0PDPFXhU/bWuEhIJxxiu58HaMohi+TAwM8V1Oq2EcgdmQE/Sp/DsKQttA44p0pOFy5tSsc94q0VkjMNuwjknCtGxBxkcEVU0iL7GY0MZRgArgjHIr0fVbP7VaqUUGROVyccdxXHatBJDdoJIWjJXOG9q8rE0HGbktj28NilUpqD3Rr28Yki5YgY7dfzpRp0B+6zLn3qjDeqqKM846VY+24Qtu2j1qYNFOLJ/slrF98KT6tU0DKCfLX5c9RXMPfveX+xTlFPJ9TV1Nah06IQ3SsDn5SATuq+dX1G6TS03OnBZ7fBIBxiuZ1VYtNtJLu4QSKjAN7c4qWTXrd7NpRIFUVxeteIpdR026iCv5LNgZ7jPWtvaxasYxoy5jubGeyeNZFXaCMil1K+gEBUPyO1cho2rL5Cpu6CoNRuXeX5HPJ45rBYhrQ3eHjclY2dzqwgmRXaMiWPnlTjGT+FXnihTkKM1W051NopAXzGzubHJ571rR2CyQhjIRWVSjLE/I8LF1eeduxl3FqJVLK22uP8UaeXjb5NwOea7q9QQDAYketZF1GlwyoecntXHDL5e20ONvmR4xqnh5nYuYjyccCuW1Lw6d+Cpxur6UPh2GaMYXNZtz4Mg8xmaEMCc9K+ghQlG1yoKPU+Y9e0I2mmvchfuEZP1OKK9p+KXheK18E6xKkQGy2Lr7YINFe5h1FQsj5/NI2rJ+RhfCLQY77wXZ3RQEtJKCfo5r1/wzpUUO1dgFeZfAjUYk8A28TMN0dzMp/wC+s/1r1TR9Si8wfMvPvXn1ZpTZ7GFkvYx9EdbZwKij6VdVFxWHBqcePvD86tx6lGRgMv51nzI6eY1YkUGrQZVXrWRFfx/3h+dLPqC7cAg/jRoVzEmo3EYVxuHSodIuF8w8+lc/qNxLIH2LyenNTaLcSQqDKME+9LQVzuluV8s9elYHiiTzbfzAAfKYHP14NPTUUMZ5Xp61Su72KSGSNipDKQRmpqRU4tF06rhNS7GRNlrNpFyWUZ49qS8ldoQwJ2EfnVXS7h45jBMSynpn0rQ8uKSE2xJ6/J9K8Fpo+m5kzCg1vSNPmVLzVbKCQthUedVYk9sZzWhNdWWoRh4naYk4UqhPOM4H4Vga18N/D+uyO+pWg84sCJ4/lkGOnPt2rc0Oz1Xw9Ziyt7yG7ijK+W93FlsAYwWXGfrjNXD3tDS3bVlG+V0UGIyleyiIkk1zfiC/OiaHc6he2E8dtbxtJI5wOAeeDXb6trOtRWkcaWmnM6ncz7mwOT0X6GuE1bRpvEU0p1+8ub21c5+yZKW4wcjK9+g4NdEYRT3Jl7Xlu4pL7yh8O/Flp4slf7Np95BD5YIlmAUEnsAOtdfqQEN9Af4ViZm/LH9aoaVaWtoUEMKRqn3QowBRqd2biaQDv8ufYVyTaUn2IrVVCHMy5pOoRhokL/XiuqivUWFcuBxXlsztFIWQ4PtVS71zU4EIjnYKOgr1aFWnZJM+PdVyk2+p6J4i1OCOMjfnj1rn7DU42mGG4B55rze71bUrmYiaYkA9KfHfSpFtjdl9eetdsYx3Qc9j3bTdQj8tRuDDFaElzAyfeFeD6b4pvrV9rsxX1rZPjSXy+jVowVQ6b4tzwN4A15SynNjL/KivJ/iJ4onu9Av4d5AkhKkZ657UV2Yd+6eLmcr1F6HLfDPV5rTT7m1Q5CzCQc+q4/pXoOneJZoeSGBridS0j/hGvjF4j8OMCkcd3MsIIxlN29D/AN8NXSxWy4FfKZtWlRxLs9HZnThpuNPl7aHTQ+LpQOd1XYPGDj1rlY7cEVOluBXlfX6nRm/tJHZ2fi95JgnPNdfpd+10gznFeU2KCOZH9DXfaBeRxxg/hzXr5ViXVb52XCo29TsktQyhu9UtSJgiJHUU0ayqIACKpX9+LmNiMfXNe7Uj7tzoctNDnr7xFNbTFCGOe9SaNdXusTSCMyJEo+Z/QngAVS1Kw+0yKI1LuWwAO5NdhpmnrpWjx2uSHwWkYD+LAJrxMFCtXxT5n7sf6sZczT1KyRH+zLK4ByyxKpIHXj/GpIrpyy5YBlPHvUWj3Qju7jTJ1KpuMkJI4wxOV/Bs49iDjBFSXtmwbcgx7CuavCVKo4yPr6E41aanE27JxNGHGR6j0q2ISVyRmuTsdRksZ9svMZ9O1dLa6pC6rggqRxzTpjk2U9SjLPtA6daxbqF94TaBmunuJ4i2Rznr7Vha5qEdqp2qGfHGR0rYvn92zOe1ZVs0ZmIBxj6Vio5AII71gfFfUH/4QbVb3zGUIgCkNg53DvVX4Z+Izr2hot4R9ugTl+0y+p9GHf161z4vBzq0HOn03XkeHmVadlHodM6B2zioJ7NHX7tXV208bMV4tGu6Z46ZgSaUhYnioZNIHULxXRuI/SoZWXFdkcymM5p9IXPAzQ2lZTAH61uOyDrVK8mVc7TWizGbZaaPOfiND9l0VycgyOiD88/0oqH4ozTX9/pulWyGSWWT5UHVmYhVH5k0V9llVT/ZlKfXU8PG/vKzt00PSv2x9DbQfiZovjOBD5N/EElPYyw8HP1jZf8Avk1kWzLJGroQysAQR3B6V9DftKeDm8ZfCnUra2iEmoWI+3WYxyXjBLKP95Cw+pFfPnwHt4fE3h17VjuudOYRuueTGeUb+Y/CvHzbCPE0ozjvHR+nQ750+TEuK+1r/mWoFOOnarSpntXoMHgi32f6og/Wnt4KgUfKGz9a+d+o1+x0fVp7nAxR/MK17WVo0AzW8/hXyzwppn/CO3MjiOBMk+lehluGrU6l2gjTcXqZEt64Xk59qu6Kt9rB8qyiLBThpDwi/U1v6b4MtoMXGrziUjDeSpIUZ6bj3+n86v6rq8Gn2LLZRIIIhyI14HXgYBGflbnGARg819bGm5LU2ckg03SLSwlDyy+bOo+ZznahPA4HTr3/AEqW5uQYWcEEnnH3sn0x37/98HsCawBLeyTG4eR43YMIolY+WrBsD+EE/MFyc8iTrS2eoJcQOs0ioAxZHPPy4Dc4J5wckZy3zKOtaQpRpq0VYybuR6koYxSx486M/u8k9TlQpPX5sbDj5mZVPANSaTr6TztZXZ2yqAyMRjch4BIydpyCCpOQQRVTULh442PlnqyvHv2sh2jcCw+6Nu0s4+6gjx0NZV1tvQskZAliO5RxGAX9M/LGkoGR1Yuuf4hnlx2CjiI3+0up24LGSw8vJ7nW3EEbnOAc9DUSWLo26GYxnr6iuUsdfuLKb7PeksuAyMwKl0PIYA4PtyOoNdXp+pW1zEGjmB9s18y4ShKzPp1OE43i7oSdNRjU/v0I9lrB1ZZ5SfPmJx0A4BrrHkR4W5zgVymrS+bPhfuj071rG7IkkkecfG6Fj8NNUjhYhkjD/XDA1wnwbvZbK3tb7cDA5/eoM5KZwfx5BH0rvPi/cJ/wheqRE/ej2gVy3gHSGTwrYQxyxxu0Qx6hiGwSfqFr18vhzJpnjZg0ezXemX9tAk7Qs0Eg3JKvKkHkfpVBjKvY1ueCNWvodGtogwkt3QEJL/BjhlAOOhB/Cuge103UHy9v5J6lox1z7Vx4nhhfFSl8meNCUdmeftI/oaqzSS4PBr0C58ORp86AMhPHGDVGbQ4+fkH515rySpDRnQlFrQ8+nnmGeD+tZd5czEkc16HdaJHk/KPzriviSYNA8M3N3lfOk/cwD1dv8Bk/hVwymbkkiKnLTi5S6GN8BdHbxn8f7O4dd9lpRN5IeoxFwn5yFf1or2f9jDwedG8A3Hie6h23WuSAxbhyLePIT/vpizfTbRX0ckopQW0VYjA07UuaS1lqe9HpXx142sZfgn8fRqcMLL4Z1gtJtUcCFyPMQe8b4YD0I9a+xq4H47fD+3+IngS50kCNNSg/f6dM3GyYDhSf7rD5T9c9qqlJJ2ezNMXRlUjzQ+JaorW19aywLNFPG8bqGRlOQwPII+opJbuHs618zfCbWvEsuo/8IHPILS/s2eKKO7fYy7D80X1XnA9PpXvmhaculQxNqd2Lu8bByD8ijIGfoCRljWf1WfNboVSxcKlNS/A3I4fNG9/lTqSfSon1C2hQramNsNtZt3GeM5+mQfpzVG61GdshZdrHhV2jCMW2/N3+VwAe2GrDvrqOby4VA8pVBYEjlSCQOT1C+an/AAAV30sPGBlOo2a5vbidTcytIcACKHsCQcZ4BO7DofQgVy+u3UtzdLApLJkE5XG4DkdQDk7UPXqTWlqdwUs/KjwWAK5UZAbIDHow4fypBwPvmsbSbdy/2lR5ecBD5f3fmGOijoTF26E1sopGRqPEAhQHYANrShenATdnb6GF/vdjVGdPtlum6R45o38xGQ5eNgS42jLHIzJgAdUGTxVmdIyjK0ZEO0qQVG5UwQf4CchCR9YqYomV2ZlXzcncmTtLhs4xuUYLK45/56D1pFGHb6ibme40+dEt9Qs32SwF9qsqncsgPaPneW/vNtPynhW3K/mIJQ6sQyhdr5bkkL2lPBEf/LNfmXjin+INMiukiureeS3nszutbpF37AqggkfLGVMTKSpJz5dVdPuxdO1nfQLDqEW5HjSXcsiqcEpIOu48mQfNEOOlF0x2LVzaJqcK7EDSSOzKIOd7nlwgB+bdgt5jttDggferk7m9vtEvFRZPMiYBoZkOUkU9CD0P9DXWRFw0qBVO7BYEYUgHhio4CggbAOHI3juK5b4peNPD+kG30vVPNnnvcncqBjberyMOFXdhgkY+X5xz0rhxWFhVV9mduExc6Lt0Ol0LxSLi3KTHJxipby7iCs6Nu4J4ry4S3dlPtkygKhlf+F1PIYHuCOa6RboyaO5jYs2OorxJ0uR2Z7cavPG6OO+KV99qsjZqxMk7hcA+p9K6bwlElraW8bqoZEGxtucAGNuD9N3Sua0fRbvXPErzbA8dou4F0JXf/CDjn8e3Fem2OhahbaaZrZDcOFLBlOMDLoB3zxjn9K9vLqTjHnfU8XH1U5cp0fguN5NPZRFgiZw64xh1O1vzwD3612UCQ2Vt5spGQP8AIrkdD1WSLVb1JNOEMCxJOLkHId3AOMY9CO56VLPqMmqXQHIhXkDHX8xXqpNnmqyOltb2a6LScLF/CKnEaOnAArKtJGwFUBUA9KuJc7ByQPqaiUE9DSM2NuLUZPGc+1eAa/bz/Fr4z2Pg/R5CdLtJCk06HICKR58ufw2r6nHrXc/Hj4gr4e8PHSNNmxq+ooVVlPNvEeGk+p5C/ie1d7+yv8M28EeEDq+q25j13V0V5lcfNbw9Ui9j/E3uQO1cc4KjeX3GFSTxM1RWy1f+R69pVja6Zpttp9lCsFrbRLDDGvREUYA/IUVYoriPVSsLQaKKBnzp+1P8LLu5lHxI8IRyR6tZASX8VuMPIqcidMfxqBz6qPbnD+F/xBtfFejGO7cR6hbxKb6MtxIpHlySr6ggqxABwVPGMV9Tmvlf9oX4Q6j4X1WX4h/D1JIYF3S6hZ245gyDvdFHWJgTuTtknp07MPX+zI8zE0HSl7amtOq/U6W9klkPk3D+XI5KybsKQx/dSEbsn74ifhB1zUEdxc8SbXV3w6g7wAzfMF+ZkHEqSL0/jHrXH+APHFj4psPszloL8RKbqFQ3z5AikkQJtBXHlv8AMxIKn61u/aQ0pAeGG5kOQokjDiRicjCB24ni9f4677CjNVFzJlu5ubZ8J5kZi7MZUJ27QM/xf8snQ/WKo1uNy/OY1BHzDKcA5D4+XsDL/wB+xTXJlj8xPtXknGMiYDYQXA5Zf+Wcki9OsftUSSTRgtKkzOuSeDgtgsR80vcxyj/gdJootQTFYmPlq0oDfJjcHfBY8JGf445V6/x1dN5HGQhkaJAcb3/d4UbQH+Zx/C0T9OqGqZaNpFVZIndWGwySoQzBl2nHmdzs/wC/pqKK3iQokMkYhKqgZCifIQUz8iM33JIz1/h9qhooulobkoxiV2GDtUeYQQXBQfKwHzCVOOxWszUrSO4dFnMjiGRGjmfIkXKhC4Z2ULlTC3Ts1TSrcSR+c8UpdhvHmI5AdkDdZWUf62Fh0/iqI/ZzIESSIR8p8kkeQmeOI0b/AJZzKev8AqBo5zXBdXkVpb/anV0kWWU2+2SSU4IABQ/I4cYVF4G0kdxXnfj2bzvFTy6tZRXGnSRRRyzQZZIGRmVlZ+MHJBJHJwa9cvEuJrd0uIZpgVJZCk7KWDeZ0+UffjmH4iuK1rwq2m29wmn2zXFsxk86GVkTf8+0FQdzFuYjk8/nUcupSZO8FprHhm2hinS1FoCVyCVYDKnA+8B8oAABA455rV0uzW0sjbT4DjOcd/pXBWcV1plvcajom+7sDu3QHcZo0+RjvwMnoOpHU1082v2Ftoa68WSZEka3tYdygyOD8uRu6KpUnnNcuLwvtGpLc7cLivZpqWxoaTqR0KZNOsnt2vr1jM5K7vJi7N1xuJ4CnGea7Oz1hYbXM94rMRxsZI8/MGzjPrj8Ce+a8Z0BdR1DVp9Xv7hZZrlstiQ8D04DcDkY7YFei6fFc3AVcSnvjEnPP+6K9KhTUIKJ51ebnLmNO91CS/n2B1MagADdGeK3dDtlWPgYJ6cj+hqtp+nmHaZCyntlmH8yP8itlJoolB3jp3cf4n/JrdtWsZItvtii5GMcnj/61cV8QPGlp4b0d7uXLzOStvByplb8uAO5o+IHjLTfDWmtNdyCW5kBFvboRvlPr04UdzXI/Bn4Z638W/ES+LvF6vF4chfCoAU+17T/AKqMdowfvN35A5yRlOagrsynOUpezp6yf4Gz+zR8NdQ8aeJP+Fl+M4TNZpL5lgko4upVOA+3/nmmMKOhI9Bz9Y9KisraCztYrW1hjgghQJHFGu1UUDAAA6ADtU9ePVqOpK56eHw8aEOVfMSiloqDoCiiigApCARgjNLRQB80/Hn9nxri5n8U/DyFIbvmW40pMIrnu0PZWPdOh7Y6HyfQviBOrTaZ4k8yxv4nlLO2+FAwCuEaNACrb4+/HzHpX3b2rzj4u/B3wp8RITcXkJ0/WFXbHqNsoDn0Eg6SL9eR2IrrpYlx0lsedWwbjL2lHR9ujPFrR4LaVpvLjSAfPueOKPciShh80rM3+qnI6dAa0ofKKgoIZJIyudm1yWSQqeRFjkpj/tqa888T+CPiT8I5ZpJLQaloR37rq2TfFtZNhLHG+E4x7ZA5Nanh74kaNrKuLu6ewu3aUxx3M0soJKI4wwZU/wBZH0OPvV2wmpaowjXi3yz0fmdtAsxVbeKWY5AiUq8hPRowcJGO4hPWrIneSMyXCTJGwLtv3rhWUOR88g6CST/vgelQtGjOVTH3iId3QZ2lODLjr5P602GGzLK0ZtURmH3VgUhGJxz8x4Scf9802ja5JKY0k87NsZky5wYc71bcRn5iPnSX/vupWt5WXyVad4QdmVaZhtBMRPyhF+5LGfw9qbb3FwqiUS3EhwJGVZJW52K5GERR96KQfj71LLAGzDPHkk+VulQd8w5zK59IT0qGhpmfcRRDEk0UIkwXIdIgd2PMx87k/ejmH/AqjNrGEMUBhyoIQqYuSBgH5Yz3jj/76rSinBPnQleR5oWNx7TY/dx/9dx1qfZcRELvm3odiF/NwSp2g/M46mOL/vqhDbOQ1jSEa4kukVvMIYLIGdgQd4GV2BW4KdfauB8QRSy+JotIhgT7NbWEV0TGhXLyfM7EL0z7gYAx2r1zXzFHp5nQ5EZDAZGdowe8voqfnVJtNgedTujC7FTcRGx27QB/CfbuatJt2IbscvpFlK4HmkhBzhi47k/xOPftXaaZFbwovyw7sdyp5/8AHvb8qo2lo9u7pliyZB2j0OM/LH7LWP4h8e6BoSvDJfteXKjiCCR3Ofc5Cr1PX8q0ukYzmkryZ3QlyAFTgcgqjdPwT0zXA/ED4oWOi77DSWXUdSzsbDP5UJ/2iD8xz/CPTrXOaTB8Svi9cfZPDulfYdI3bZbgM0cKj/bmOS/+6v5V9CfB34C+GPAzw6pqO3W9cTDLcTR4igb/AKZRnoR/eOT6YrGriIw9SIRq1/4asu7/AEPLvg98C9b8YalF4w+Jr3S2shDx2ExImuV7b+8cf+yMEj07/VllbQWdrFa2sEcFvCgSKKNQqooGAABwAB2qSnV5dSrKo7s9TD4eFCNo/eFFFFZnQFFFFMAooooAKKKKACg0UUANZVdSrKGBGCCOCK8k+In7PngHxXJJd2tq+g6g+SZtPAWNz6tEflP4YPvRRTUnF6GdSlCorTVzxnVfgX8WfBMrz+EdTi1a1HO22kEch5HWKT5SeB0J6Vzs3xC8aeGJGs/GHhe7SXlcy+bZk5DjjA2n7/GP7o9KKK7qFeU3Znj4ugsMr020a1h8X/DV04fUrK8tyW3MDCbgfeBI5l/2pe3RhWjbfEzwc8WY9UeCQrwXthD82wD+GNiPmijPX+L2oorqlucMMdVuXW+IfgsSFm8Q27x+YCEJuZTtEp4wdo+5K4/4DWfN8SfBsMW6PUg0qrkeXYqMsEGOSGP3ok/76ooqbGjx1R9jM1H4teG1ieKG31O6jOVCqI4wVycfwjsErLt/ih4m1cRaZ4Z8M3FzcCNIx881w5IUAHYmB2+lFFN6amSxVWpLlbN/S/hH8a/HMm/XrltEs5OWF7cFeOOkMZJ7fxYr1nwB+zX4I8PvHda403iO7XB23KhLcH2iHX/gRP0oorzp15ye57lDBUlaTV35ntVlbwWltHb20EUEMQ2xxxoFVAOwA4AqaiisDvEpaKKBBRRRQMKKKKAP/9k=" alt="Connor Bays"></div>
+        <div class="presenter-name">Connor Bays</div>
+        <div class="presenter-role">Head of Sales & Partnerships</div>
+      </div>
+      <div class="presenter">
+        <div class="presenter-photo"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADIAMgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD7LooooAKKKKACiiuA+LHxZ8J/Dq2K6rdG51N03Q6dbkGZ/Qt2Rf8Aab8M00nJ2RM5xhHmk7I78kDrXl3xE+O3gDwc8lo+otq2oJkG10/EhQ+jvnYv0zn2rwTXvGPxW+MLvFBJ/wAI94bkJHlws0cbr6M335j7DC+1bHhL4W+GNFRJbi2/tO7Uf6y6AKA/7KdB+Oa29nGOsn8jgeKq1dKKsu7/AEQuqfHj4qeM3eHwP4cj0q0YkLceWJnH1kcCMfgDXO3fgD4heKpPO8Z+N5pgesTTPPj6L8qD8K9cjiUIqqiqFGAoUAD6DtUqRtnH9KftbfArC+quf8WTf4I8wsPgv4XhT/S7nU7x+5MojH5KK2bf4X+CIcf8SNZD/wBNZ5Hz/wCPV3Pknd79val8nGThuPapdWb3ZpHC0VtFHH/8K68E7efDVh+TZ/nUM/wy8DTA/wDEghQ4/wCWc0i/yautnngjfYZI2YnlTIqkfnXMeJ9S13RpUvbSwluLbrJGcMGUehXkfWsZ4hw1udEMHCbtyr7jCvfgz4TuUP2Z9Rs3PRknEgH4MKx1+Fvizw9O114O8ZzWrr8yqJHt2J+qEqfxFemeGfE2k+IbMXFnNtccSQPxJG3cEVpBg0oVSCrrvU+uDzWsMU2tHcwqZdST1jZ/ced2Hxe+NPgUgeJ9Lj16wXgzSxDOPaaLj/voGvVfh/8AtGeAvE0kdpqcsvh29chQt6R5DN6LKOP++ttUCvXge9cd4r+HHhbX1eSXT/sV02SJ7QCNif8AaX7rfiPxquaEt1YzVOvSf7uV12f+Z9RQyxzRJLDIkkbjcjK2Qw9QR1qSvivSZvip8H7jzvD9++saCjbntmVpIQvfdFnMZ/2kP1r334P/ABy8LePvK06Zho+uNwLKeQFZj/0yfgP/ALvDex61MqTSutUa0cZGUuSa5Zdv8j1eijIorI7AooooAKKKKACiiigAoJwKCcV8wftB/GDUdd1eT4c/DqV5XkYwX99A3Lno0UbDoo53P9QO5q6dNzdkYV68aMeaX/Dmv8cvj49leyeD/h0BqGsu3ky30aiRIX6FIh0d/f7q+56ee+Cvhkz3Z17xtM+qapM/mvBNIZFDHvIx++3t0HvW98NvAWn+E7MTELc6pIuJbkrwgPVEHZffqf0rtUQntmtZTUFyw+85I0JVXz1vkuwiRKqBVAAHAUDAA9BT1T6/h1qRVx1rivib4isdM0mREmlW9AyI0YjA/vE9vbHJrnnJQXMzup03N2R0d1rej2isbi/iQqDnLcjHbHr7VymufEuG3fytKsDMQMtLO21SOxCjk/pXgniPxLfTSCdJZGYEHJPzD/H+dUoPF0hR7d1ABPHzfdPqPTNefUxNWS91Hp08JSjrLU9f1rxprt2Fmj1aOHJAVIwUUexxz+prIn8QeJpUAnv5pRg/KlwwGB9OteYWmu/aUntpHZWA3KC3cVdh16dIhI7hmRy+4MAc9/pXFKNV7tnbFU0rJG3H40DaqbWdpRIynCu24nHoeueK6HTfEeoD97p1+1vOOHiL/JLjHUdOlcBq11Z6nBHdqkYu0JKkqBuOcnnsaz21hoWF1HuQb9sqn1xikoPpuNtPR7HVXXiq9sPENxcRxvazlv3mwgBj3IFd94D+IbLfQxX8+6EIVJ64DYP6YJ/SvCtf1WS7Blhn2TxEBWOOVPY/jz+Jq74fuporWe5a4E+AoyF5z16dfatoRnTXPcyqcs/dZ9ladcwX1qJoHWQZK5U+h/yandMcHk9a8S+FPjuODSLnTrmYh3dDCTwQxZVI/L+VeuaZrdrfG3KHCy2scy855csAM+vymvUpVVONzyKtFwdi6U4wCAK85+IXwu07W2fUtGMem6qDvymVimb1YD7rf7Q/Ed69LdQBkntxzUTcYAFdEZtO6OSrShVXLNHH/B/466v4Y1NfBnxTE6rGwjh1OXmSIdB5p/jT0kHI756j6jt5Yp4EngkSWKRQ6OjBlZSMggjqCO9fNHjjwjpnizTfs18nl3EYP2e6RfniP9VPdf61zfwb+Jet/CXxIngjxw7P4dkb/RrjJYWoJ4kQ94ifvL/CckdwdJRjUV47nPCrPDyUKusej/Rn19RTLeaK4gSeCRJYpFDI6MCrKRkEEdQRT65z0gooooAKKK4b43ePrb4eeBbnWGMb38v7jT4G/wCWsxBxn/ZX7x9hjvTScnZEznGEXKWyPNP2pfirc6Zj4e+EZZH1y+CpeSwn57dH+7Gp7SOD1/hX6jHL/C3wRb+EdJzKEl1S4UfaZRyEHaNP9kdz3P4Vz3wa8N3dzcT+O/EDvc6pqDvLC8vLYY/NKfdu3oPrXqqjjnvXRNqC5F8zhoQdWXt6nyXZCqB61KgpqLwOKmRfrWR2MyvF2s2/h/w/PqNzciFVGF6ZLHoB718weJ/Ect/cXFwXIMrEnL8kHqDnJNew/tLXNva+G7LzW8xpJG8uIjAGBy+e5GQAOnPevl2/1GUyGNWLN/dHQVwYm8pWO7CpRjcq6tezx3JPm+ZGTjGT09qiR95AViVdsA9hn/69dDonhO+1W2890JQ8qWFQ6v4WvdPVtqNtPYr09KUWlobSjJ6mIJJIb6JuA6EbufvA8HNWJ73FxO0bHG3LDHQ5HP5VRvVn4dlIdRtY+v8Anmm28MjAeX97oR681TSaJi2nYu22oMWJGQrDB9AQOuP88GrEMtzIXVlLow2Mh9P8PQ1oaH4auLnaUUgH+Hbk16N4e8CGNUdopDkY+YdKwnJI6YQkzye40+5VWJDFDGFz/ex0qq17dW8KxQyvEFJOV9cAc/rXvZ8Cs6lGtti4IXHX615x488D3Vjm5RDhTyMcfWphWT0kVOhJK6OTtvEF/Bcxq8h3bvmYEE/jXuXgTXLi7stHtYZpUkeWN8g/Msak/pgkD1Le1eCG2FyuZy0cqr8rLH98jqD74r1z4RRxWE0d5c+ZOEACRh9o3Doxz1xnpWjnCD0OdwlJan1JBOskKcgSEDKg8ilZR0H8qzvDt6by1Vi0JAAIKfx5747HIOR6itVx2G4/Su+Mro8qceV2KzAccVzfj3wpZeLNFexusRzJl7a4AyYX9fdT3HeunIGf8aaRgntVxbT0MpRU48slocZ+zT8SdQ8J+Ij8LfGcpjiEvlabNI3ELnpFn/nm+coexOO/H1OOa+R/jR4O/wCEh0c6tp8bf2rYRlk2/emiHJT6jqvvx3r1v9mD4mf8J54N+w6ncb9e0pViuix+aePok31OMN/tA+orSrFSXPH5mGGm6U/YT+X+XyPXqKSisD0BTwK+M/ibrLfGH44f2ZbyM/hzRS0Ssp+VkUjzXHu7gKD/AHQK+hP2kPGDeDfhVqd5bSiPULwfYrM55EkgILD/AHVDN+Arwz4EeHf7H8HrqMseLnU8TcjkRDhB+PLfjW9L3U5s8/FP2tWNHpu/8j0CGNY1VIkCIqhVVRwoHQAegqZQPSkAx1H6U9emazR1XSFXj1qxF9OtQjpUsNMGzwz9sASJZ6BcYzGPOUHP8Xyn+VeC+BNGbXddjtUQlc7mPtXtH7Xuoi6u9K0ZHOLWJpnAPALkdfwArB+AumxxWl1e7cuxCgmuGvJJs9LCxbSR6d4d0C0s7JEVBgAD6UmseHrO8jP7pQy5xgda1rNysAHFSlh6VyJ3eh6jhZWPJNf+HaXLl44kX1wOtZth8PDHdAvGQOMcYxXteFKng/Sk+yKzbzj+VaXZCguxzvhfwzBYW6qY0yxHOOa6+zsoo1X5ACKbFGFjHcj1q1E528DNZTWhvAtpao6gbePTisPxJ4ctr+3eJowcggYFa0Fy6MeD6YNXQVk61wybTOpRuj5K8SaSNE125s5sD5lMZIyBgnn3HrXS+F7m3e3CKiLITjGf4+vHsa3P2gdCK3EOoQjaScFgK8s0m6mguIySR5bYyOxHb8uldLXPBSPOmuSbR9I/CLVJZ5pLXklRuznpz6eh7+4FemPzyMDivNvgKzXWm3NzII5VVwYSqglM/e9wDxx0r01j8xOFC+3NerhV+7TZ4mL/AIrK5AAPPWmEA/XuKlYDOcUxl4J55roOYYcLyvOK8a1G7uPhD8ZrDxdp8bf2RfuTcwoODGxHnR49uHUeoHpXs2Pf3Fcn8U/Dx8SeDryzjXfdRDz7Y4/5aKM4/EZH41pTlZ2ezObFU3OF47rVH0xYXVvfWUF5aSrNbzxrJFIpyHRhkEexBorxP9jfxf8A258OX8PXMhN5oUgiUMeTbvlo/wAjuX/gIorKcXGTR10Kqq01NdTgP2tNSl8V/Fzw74BtXJitFVpx2EkxySfpEoP/AAKu4t4khgjihQJHGoRVHACjgD8sV5L4FuT4v+PPijxa7eZEkszwnOcBm8uP8kU17Bit6itaBw4V87nV7v8ABCfj+NPGc8ikGc8Gnc/WszsFXpipoRzio157Z4qWLj0oJZ82/tMIP+E+2OwLSWsTdO3P8sfrWv8AC3T/ALNoMcmABKSQMYwBWp+0xY29xc6ZcIhN0kREpwP9WSQp9eufar3h+JbDw5p4mZEIt1Z8npxn+teZiPiZ7mCV0mzZht3AyRxUpQAdMVy95490uzlMRy6rx5gYYNUD8S9BLsPPdsf3U/rWMIs73ON7HbqOe1TAnvXM6N4t0rUlVoJTk9mGDW3LfxLFkAE/WtdENK+xcLfLipLT93hfmb3Y81jTarBFbPMxACjOM1Ut/GmgRuouNQijf0OcVnNXRrG0dzszGWIyuKljVg3SsGz8W6NNtMV7DID3DggVvWOpWN9FiCZCw964asGjphKLOJ+MFg154ZmkVATGc++OlfPulWAjlmEpALH5e5BB4I/z3r6p161F1p9zA6go8bA5r5puY3g8RBRGDGJQowMn72BWmHd1Y4MYrSufTHwgtfs3w+05isfmSR5Zlj2E89D647Hrj6V1LA0WKCLTrZVXZiJcqo4HHP8AWnZz35PWvoYRtFI+anLmk2RMuex/OmNxU20Y44qJqbRDGMvPAxjmmfMPmznHTPepcHGfWoyDn3/PipFY8t+E92fAH7Tp00nytO1zMCqOmJvnj/KQbfxorO/aHglsNT8O+JrI7LiCQx7x2ZGEiH891FdLpOqlJHlwxiwkpU5LrdFr9mi08vw7qt+Rgz3axj6Imf5vXrYGe+Pwrz39n6Dy/htbOB/rLqd/r8wH9K9DGfSorO82dWDjy0Yhj6Uoo704g56Y+lZnSC9eOKki9KjX9fSpF49qaVwPLfjTpUt74n0uRsGBrCSIgj7zGQYH5kGqXjcAaZ5AUiPbgkdgO36V2HxLj8y60EHGftD59egI/lVSSFJlw6rgeteXitKh9Jg1z0Y+n6s8Avn05ZnSPSb6/cc5ihLf+PHArHvr3SFYxSeEbiJ8bt5k4J7A46f0r3rUrERH5I0APcCufvbd3ypEZJ6nZRBq2qNKlGXRnnHhzU7e2uYWayuLN3UOqM+4MDyDkH9ODXqWj3z31urx5dcfrXNtpMEcxkSKJ5hkozRj5SeP610fhq2ezt0Rh17Gk4mtKMloyl4geWKBo5wwVgeP6V5prz+HhKReXE+4Hny8sQc9OPevXfF9jNcpEiruXqc964h/DqxebbtDKsExBlXd1wcjp6Gs4pORVaMraI53TIPCbyIthrs8M5wdk8mxjnpwwFd34cXVLK4WaC48zbghs9voOtZ9j4I8PmKSMwylZl2uob7wznH510PhjwVJpN2raRqM0cGQfs1xl0H+6eoqK/KloRQp1PtL7j0+zka80nzSu1mjOVPrivGfB2jxXnjKK71F0gsI7rLvJ8uTuO0DPU5wRXtWlxSR2HluBu9q8r8QaUlxpukRROJWNzjag/jLcZ9+tc1BtPQ6nhlXkoy2PfpfQEknue5qHb9anuAwODnpg1HnPIPpz619InofGS3sR/73FRuMkqOR9KkcDgAd+3akxx0H/wBelcV7ERB5zxnrTMd8dBxxzUxy3TBpn4fjQ2Js86+P1l9o+HFzNjLWlxDMOP8Aa2H9Gorb+LMQm+G/iAHqtmzAe4Kmiu3DP3Dwszheqn5Gb8B/+SYab/10m/8ARjV3eK8+/Z8m834a2yA58q6nQj0+YH+tehgcdKwqL32ethmvYx9EAyB7UvbINFGMdeKmxtcAPb86eOvemY5p4xjGKYjk/iYQh0aTBz9qZcgeqVl2UoYYc4UdeetbPxMH/Es01wrfJfIdwXOBtYYrjLm+8oEhua8vFx/en0GWzvSS7G5dvFINoRMA8cVj3htkz91QKybjWmiXIODkjmsOe8uNQkJZ/LjGfqaz5layPUTT3N1bq3lvVgt7fzcn53HRa1DHFblPMl5cg/SuIt/EqaHbC0WzlkfzWJliwepzzk1pwa9b3cglmG8sOhYgg/Sk0zWk4KVz0A2wmtvMcgxY646Vii1tJ3PlOrKTVXS/G2io66ZdXkCoflILfpnpWVqN4lrrdzcWJL2jSZXB6cDP61hG6ep0zcbXR1VtpKh12AH9K6TTbeNVCvHz2z2rl9G1lZIwxI2kcZNb9hqKPxnjsaVZXRnBo1JJViicnGFUk59hXKfCa1TULpLu4TctvI06Flx83QH/AMe/Sr/ia7aLS7h0zuZdigDJJYgdvrXW+E9NWztproj57lw6r0CqOg9u/wClLB0+aojlx+IVKjNrdq33mnKABxxUZyQelSyDnHUetRjrXvHx4wgkHA79ab+FPIBU5OCfxxTfzxRYVkMI4yOh4ximgADk1J7dqRxyGwCSO/NOwzmfiUqn4e6/v/58Jc/980VF8WnEXw08QOTgmyZfxJA/rRXXh0lE8PM/4i9Di/2YLzzfDer2LHLQ3iyj6OmP5pXrx6V4z8P7f/hEPj74p8JPmOKaWdIAR1Ct5kf/AI4xr2bp1yazqr3rnbgm/Zcr6aDR1pwxS556UcelRY6wpRTW6ilzxmmJnOfEzK+Fmm37Vhnikb88fzI4rzC7kMjYLcqBntzXr3i/ThrHhm+0/JDyRZjKjneOR+orwO51JhHIxbaYx+93MQdw4x+frXn4yDckz1suqpQcSHxdqH9mWImC7nLHAI44Gea87/4SW+vJQsczqTknaepz/hiux1yAa7YSpJMEYH5MHkj19utcxrvg68060hvNJkZGVAJFbo319K5YrU9CUpPUyru+uzeOJZyMYyM8/StiLUbqK1Ek9nPuAPkuVYbyOx9RW1oEGjXUVmJ49Riu2lcT7UVhEgXhjx/ewOMk11//AAigSK0EXiVV84fvEljxsO3J6d/atHESnFPV2Z5oNXeQpII4yUPEYUYB47f56V01l4qSCIpJFwOMMOCO30qTX/Cen2twUfV9MM0kzRbgxXGF3ZJ5A/GuA1C7uryUwafbTziIbfMC/K3uD3rJxN1W00Z67oF/HdWUd5bHbG33oyc7T/hXV6LdMxBJPPSvNPhA0hgmjmR1zjKsOOpxjNehW7QwDczqecbfQ1zTNoVXbU6eCOLVtc0nS5N7pJKZ5grYOyNS3X64r0w4ChVAAA6Y6DtXA/DWNrzXZ7zcrLa2uxAByDIQf5J+td8/NelgYKNO/c8LMqznV5b6IYxPpUeMnHc9KkY/jTSMj7oNdh54zpxtzSMPlGBTu/emnoRzTQDe9I2fQU4jr0/EU3qeB0/CmB51+0HeC1+Gl1Fu+a7uYoAD6btx/RaK5n9pi8kur3QPDdqDJPK7T7B1LMRGg/E7qK7qHKoLmPnswvUru3TQ6H9rHT5vCXxe8O+P7VGEV0qiYjvJCcMD9Y2A/A16NBLHPbxzwOHilQPGw6MpGQfyNdB+0n4Pbxj8KtRtrWISahY4vrMY5LxgllH+8hYfUivFfgJ4lGreC10yeXNzphEJ9TEeYz/Nf+A1zxfPBeR6f8HESj0lr8+p6XketNZwD1GPWqxkP8JNNf7QR8qPkHnilY6Sd5B/epPtGOMdap3OLeMyXcoiHoDuNY8mr3VzMbfSbFpGPSSQ8fl0/OqUbis3sdEZ9qluQB7da+ePiTbfY/G15NCsS211KQAVztkHJH49RXuQa4jtFjuZllmPLlRgA+i+1eXeObW3v77VdOuoyQ7iVc9ty8MPxBrmxcbQO/Aq02jzuOWKaVbiQIoZt3P8XFdfYkXVlG+0OvQ55DD1rynUBLpd81nOAjgja7AkMvqMHpXfeBNS+0Q/Z5JMrk4diPw+lea11PVpzVyzqOj2hbekKFQc4PUfQ0Qq6IYYbi7jwCMRzMMA9e/fvVvV5IPIBjIdiSOD0rndPluxfSHcW3EDjnaPf36cU+Z2OyNe2lrnQ2mgi9Y/ajcTKcY+0SFgMe1aI0nTtPifZApbbgEitHS1UQJmYNkZ5PWszxhqL2YMVuykhctxzWMpO5pKacdjHjuzFCy2m2NggKKOAcn/AOuans7/AGz/ADh5ZVYAKoJ8xiR07nPSuUm1KKISyYDnYOc9Dk/5/E16L8BdGubnW7bXNYU+WzP9jidRljgkSH0wM4+ualR5nY45zaTaPZvBWjHRdBihkXbdzETXOTnDnqB6ADA/CtjIHcjHvVeWZkkdWYHacHHagSh/Qn3r2YwsrI+cnKUpOUibjnnrTOM9eewoDd+KQsM9MUAgOc0cUY7EH2pPypoYnvSdenrxTu+M1yXxX8R/8Iz4IvryNwt3Ov2e1HrI/Gf+AjLfhVRV3YipNQi5PocP8OLb/hYf7UgvgDLpujuZweo2QfLH+chBor079jDwd/Y3gG48T3Me251uQGEsORbx5Cf99MWb6YooqyvK3YwwVNqnzyWstT3ojivi/wCJWkTfBz45G+toWXw5rG6WNVHyiJiPMjHvG+CB6EV9o1wXx08AQfEPwJcaUAialBm406Zv4JgDhSf7rD5T9c9qmjNQlrsaYyi6kLx+Jao4g6nAkET2gSZmUMpVx5ZHY7vTHpWdNrkjTtGsiYQZYw4VSfQE5Jx9RXkXw18TahbpL4I1mKS3vbORoo1lGJAFPzRN7qc4Hp9K9G01ViT51I5OFzXoRop6siliFUgpRIfEtzMLPeHnVjzuaUnPvyeat+Gbi5jeOHzNy+S8kpCKo4wFHHJ5OefSs/xOpk0yRiM7Tkd+lXfCMongnlHXaqj8eaTjym6ldFty4fcwJ9687+JP+ha7Y6if9Xcg2z/+hKT+II/GvUXUEE7Qe4JNef8AxotGm8HzzRrmS3dZVx/snP8AKsa8Oam0a0JuNVM808XaDHqcO5TslQbkkXsa4jTZ7nTLh7K6bZKhJV8/KVxxivTNIuo7zT43z/COay/FGgWmqW5LR/Op3Iy9VPqK8Q9iUbO6KFnqyG1QAAvkfLnnd3zV61vreBZ0QhZmbMm08Dn26e9ef6jpevaTKWiQzoP4l6+xIquNa1CIlPssrZA3Axnk4/xzQxqdj1B9cLI0jSZ2sSqD0/8A1VyninxObmZfLx8vyAE9vT8aw1l1zVkjjsrCZB0Z2yoxj1Ndr4M8ALFsu9U/fN1VecL7/WsmupqpueiIPh34Un1K6hv9UUrbDBjtzxv7gsPT2r3jwXLGfGem6ZCMeTBJcSYHbhU/P5vyrlrcW2m2jSYCKvJra+Aok1XX9R16QcXCARD+5EDhcfXGfxooxcql+iKrtUqPL1Z3/jCGbTNVs9ZgDC3mYRXajlc4+Vse+CD9BV61ht9RtkuLCVQX6q3IB/mK2NXthfaVcWvHzodhYcBhyDXD+C7i9jvLiFrh/kfCHC7T/wABxXpwu1oeJOKb1Ogngu7YZlQhP7ynOKRJV4yTn+dX49XtLhvIndLa6QkYc/K/uCeufQ8j9ar3lgSnn2qDIOWQdG/3TV81viMfZ9hoYMOM/nR0BzWbBqMQmMM+6Bx/eHH/ANatAghjvGP607iatuO54BBz7968J8SJc/F34y6d4O0qRjpdnIUlmQ5UICDPN+Q2L749a6346eNx4c0M6Tp83/E21CMhSp+a3iPBf1DHkL+J7V6P+yv8NH8EeDzq+rW/l67q6K8qMPmt4RykXsf4m9yB/DWqfJHm6nBW/wBoqKitlq/8j1zSrG203TbbTrKJYLW1iWGGNRwiKMKB9AKKtdqK5T01oFBoooA+cv2rPhRcXxPxE8JwyLqloBJqEMI+aVU6TKB/GoHI7qPbnifhz4xj8SWIWZoY9RhUCaPpvH/PRR6H9DX2GelfKv7RHwfv/DWqyfET4fxPFCjGa+s4Fybc9WkRR1jP8S9uo46d2GxFvdkeZiaMqMnVp7Pdfqi9qIE1lKrNncp6d/pTfAUUsGjTq+WAuSEY/wAQAGP51zHgjxlZ+KNN8nCW+oxp+8gz971dPUH9P1ruPD8Xl6IiZLfM5KjtzXXNdTSjVVRXjsXcnYynkj24BrE8W28d3pM9oUDqyMCqrnOR+tXde1fS9Ds/tes6hHaxlflUjLOfRVHLfhXk+u/GEXG9dB0OR41fHm3b7c49FXJA+prJuK3N3focl4dMllPPpsgIMDlBn0zx+mK6BwSnHWsLVpHla18TW0QENyNt2E6QyZ4B9jng1uadNHcQ7lINeHWpuE2me9QmqkEVZlDDDL+BFNjtoWbLIprTkgJUjrmoRaFW3cn8awaNkkibT4IY2+WMA549q10uNqkKCMdazYoiV5YKKr6ndRWFq8sjjaoySalwubRmolLxTey39zFpEL8zg+YV6rGPvH8eB+NeyfA+3ERuWUYQKiAdMewrxLwhbyXEM2tTqfNvmCxBv4Igfl/Pk/iK+gvhJavBp0srKQzucZ64Br0qVDkp3Z4+JrupU02O9kVsBkYAjrnp+VcclqbPxTdIkYERfzF54AbnP554rrll/eEfd9qydfiEd3aXm3BIMTsPxI/rTp72MZvS5i3uo3FveSw5TZjjKj8K0PDt21xG4jX7OyscGJflOfVehrF8R3G8Zyd2duR37fnmtTw1lLYEscZBOG6/hWs4pRIi2T69Db3NuJnSFJwDn5tvHqM9R+tc7418Z6T4V8Kve3kyzXm0JZ2yN80z46f7o6k9vqRU/wAS/Gmj+FNIaa8kEk0mRb2qH95O3/sqju3b3PFeefCH4ca78YfEy+MPGHmxeHInxFGCVFyFP+pi7iMfxP35A5yQqcNOaWxx4rEWfsqesn+HmzW/Zt+HGpeN/FB+J/jWMzWizebYxyLhbmVTgOF/55JgBR3I9Bz9YYqKztoLO1itbWGOCCFAkcca7VRQMAADoAKmqKk+d3NMPQVGNlv1CiiioNwooooAKQgEYIpaKAPmr46/ACZ72Xxd8N1+y3qkzTaZEdgZupeA9Fb/AGOh7Y6HzDw/8VbzTNOl0jVtNMWsxSFBJKPLQNnnzFOCrD06H2r7j7V5x8XPg94U+IkJubuE6frCriPUbZRv9hIvSRfY8jsRXVSxLXuy2PPq4SUJe0o79uj/AMj5L1DR9a1fVW1jUbv7fJIPvHoo9FHQCs2XS0stUljkjXyZMEH0NdN4v8BfEn4USvLLbHUtDU/8fVuGkgx6sPvRH68e5qhB4j0DxBbbJ5BYXZAwsuNjH2bp19cV2RjCSujGOL15Z+6yLT1ttDhu47mFvLk4WQAsuT/BIvTYex7E47VHY2stqHubFvPsQNzJuBeAdw3qB6/nW/bwCSLyJthdE24LfLIh7e4qmdKkstz6dKyTQ87R/HGegPqeo96zrYVVFY7qGKdKV0NF4hQEEEntToboSpnbg9s96xZk+ZZIV2RuSGQc7G/u/Q9s+/pUlpgbZJwzGFfx/wD114s6ThJxZ79OqpxUkbU0wSLfwPXNclqUUuv6itn8y2avuuXHQKOSvuT/AFrZt47jXL/7PE5jtQTudev4H+tbekadabpQqiG1gPl8D0/ma68NhHL35bHJicXGK5Y7lrRrX96kssflxwjdgHO2NRknA6AD+VWvCHxZ1jRrkxapokV1pxc7XtyUnRM8ZBJDHGM9M1TuTLcI0KsViYjduPL46Z9vaqr2UQXD/rXbVi5aR2POjI+hfDHiDQvE9mbnR7+K4UDcyfdkjPoynlf5VP4niB0KWXBHlMr59uh/nXzZaMbO8S60+WaG4jyUlhYqy/iK69fjPb2ei3Wm+IlXUJ3hZEe1wZCcYG8fdHbnj6VzKlJPYqdeEY3k7HVspurxSQxiTpwSD71yPjv4qad4daWx0Ex6jqWNmQS0MB9z/E3+yPzFc3o8fxO+Lc5sfDWmvp2jF9stwGMcAH+3KeW/3V/KvoH4O/ATwx4GaDVNR263riYZbiaPEUDf9Mo+x/2jk+mK3lKEN9WcDr1cRpRVl3f6HmHwg+Buu+MtUj8Y/E97lbWUiSOwmJWa5XtvH/LOP/ZGCR6Dr9V2Vtb2drHa2sMcEEKhI4o1CqigYAAHAAHapKdXJUqOb1Ouhh4UVpu+oUUUVBuFFFFABRRRQAUUUUAFBoooAa6q6lWUMpGCD0IryT4h/s+eAfFckl5bWj6DfvkmbTwqo5Pdoj8p/DB96KKqM3HVGdSlCorTVzxLxF+z/wDFDwnM1x4YvYNbtkyVW3k8uTHvFIdp+ik1w+oa94s8N30aeJfDlxZXEeFPnwPAWAz6jafwoorto4icnZnj4ygsMuam2inc+KNHublpYoLm180fvFZQ2D2II755qm+s2t35cM10IY2AMx2kfgMetFFb1KMKkk5I56ObYinFxVjp9F13w5ZPHIupwiNVKsmGzjHYYpreJ/DqKAt7lRkhRExJJPU8de1FFay10B5hVt0K1z430kRYjS5k56LHj9SaoQ+INZ1u6+yaB4fubuZuFSKN5n5/2VFFFKXuxM1i6tSVm7eh23hv4HfFrxWVOqpHoFm3X7ZIFOP+uUeSf+BYr2j4f/s1+CPD7x3WuNN4jvF5xcqEtwfURDr/AMCJ+lFFeZUrzeh7NHBUlaTV35ntNpbW9rbpbW0EcEEQCxxxqFVAOwA4AqaiisDvEpaKKBBRRRQMKKKKAP/Z" alt="Spencer Graling"></div>
+        <div class="presenter-name">Spencer Graling</div>
+        <div class="presenter-role">Sales Manager, Western Canada</div>
+      </div>
+    </div>
+    <div class="meta">Vancouver — March 2026</div>
+  </div>
+</div>
+
+<!-- Slide 1: Section 1 Opener -->
+<div class="slide" data-section="0">
+  <div class="slide-inner section-placeholder">
+    <div class="placeholder-icon">📚</div>
+    <div class="tagline">Section 1</div>
+    <h2>Group Retirement <span class="accent">101</span></h2>
+    <p>Everything you need to know about Canada's retirement landscape, group plan types, and why this is one of the fastest-growing opportunities in financial services.</p>
+    <div class="card-grid cols-3" style="margin-top: 40px; text-align: left;">
+      <div class="card">
+        <h4>The Retirement System</h4>
+        <p>Canada's three-pillar framework, CPP & OAS basics, and the retirement readiness gap that creates massive opportunity.</p>
+      </div>
+      <div class="card">
+        <h4>The Market</h4>
+        <p>A $365.6B industry with 83,000+ plans. Plan types, regulatory landscape, and competitive positioning.</p>
+      </div>
+      <div class="card">
+        <h4>The Opportunity</h4>
+        <p>Why group retirement is a great business for advisors — recurring revenue, compounding AUA, and underserved SMBs.</p>
+      </div>
+    </div>
+    <div class="meta" style="margin-top: 40px;">Presented by Alex Mazer, CEO & Co-Founder</div>
+  </div>
+</div>
+
+<!-- Slide 2: Canada's Retirement System -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Foundation</div>
+    <h2>Canada's retirement income system</h2>
+    <p>Canada's retirement security rests on three pillars — but two of them were never designed to fully replace working income. That's where advisors come in.</p>
+
+    <div class="pillar-row">
+      <div class="pillar p1">
+        <div class="pillar-num">1</div>
+        <div class="pillar-title">Government Benefits</div>
+        <div class="pillar-desc">CPP/QPP + OAS/GIS — Universal baseline, but limited</div>
+      </div>
+      <div class="pillar p2">
+        <div class="pillar-num">2</div>
+        <div class="pillar-title">Workplace Plans</div>
+        <div class="pillar-desc">Group RRSPs, DPSPs, DC Pensions, TFSAs — Employer-sponsored</div>
+      </div>
+      <div class="pillar p3">
+        <div class="pillar-num">3</div>
+        <div class="pillar-title">Personal Savings</div>
+        <div class="pillar-desc">Individual RRSPs, TFSAs, non-registered — Self-directed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 2: CPP & OAS Numbers -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">Pillar 1 — The Numbers</div>
+    <h2>CPP & OAS in <span class="accent">2026</span></h2>
+
+    <div class="split">
+      <div class="split-left">
+        <h3>Canada Pension Plan</h3>
+        <div class="card" style="margin-bottom: 16px;">
+          <div class="big-number">$74,600</div>
+          <div class="stat-label">Maximum Pensionable Earnings (YMPE) — 2026</div>
+        </div>
+        <div class="card">
+          <div class="big-number">5.95%</div>
+          <div class="stat-label">Employee + employer contribution rate each</div>
+        </div>
+        <div class="callout" style="margin-top: 16px;">
+          <p>CPP enhancement is phasing in — the benefit will rise to 33.33% of pensionable earnings, but maximum CPP retirement at 65 still only replaces about $18,000/year.</p>
+        </div>
+      </div>
+      <div class="split-right">
+        <h3>Old Age Security</h3>
+        <div class="card" style="margin-bottom: 16px;">
+          <div class="big-number">$816</div>
+          <div class="stat-label">Monthly OAS payment (age 75+, Q1 2026)</div>
+        </div>
+        <div class="card">
+          <div class="big-number">$95,323</div>
+          <div class="stat-label">Clawback threshold (ages 65-74)</div>
+        </div>
+        <div class="callout" style="margin-top: 16px;">
+          <p>OAS + maximum CPP together provide roughly $24,000-$28,000/year — well below the average Canadian household's pre-retirement spending.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: Retirement Readiness Crisis -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Problem</div>
+    <h2>Canadians are <span class="accent">not ready</span> for retirement</h2>
+    <p>The data paints a clear picture: most Canadians are underprepared, and the gap is widening.</p>
+
+    <div class="split" style="margin-top: 24px;">
+      <div class="split-left">
+        <div class="stat-bar-group">
+          <div class="stat-bar-item">
+            <div class="stat-bar-label"><span>Feel unprepared for retirement</span><span>57%</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width: 57%"></div></div>
+          </div>
+          <div class="stat-bar-item">
+            <div class="stat-bar-label"><span>Say savings is "prohibitively expensive"</span><span>70%</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width: 70%"></div></div>
+          </div>
+          <div class="stat-bar-item">
+            <div class="stat-bar-label"><span>Age 55-64 with $100k or less saved</span><span>73%</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width: 73%"></div></div>
+          </div>
+          <div class="stat-bar-item">
+            <div class="stat-bar-label"><span>Women age 55-64 feeling unprepared</span><span>62%</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width: 62%"></div></div>
+          </div>
+          <div class="stat-bar-item">
+            <div class="stat-bar-label"><span>Cite money as top source of stress</span><span>42%</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width: 42%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="split-right">
+        <h3>Confidence gap</h3>
+        <div class="donut-row" style="margin-top: 8px;">
+          <div class="donut-item">
+            <svg viewBox="0 0 36 36">
+              <circle class="donut-ring" cx="18" cy="18" r="14" stroke-width="4"/>
+              <circle class="donut-segment" cx="18" cy="18" r="14" stroke-width="4" stroke="var(--cw-emerald)" stroke-dasharray="59 41" stroke-dashoffset="25"/>
+            </svg>
+            <div class="donut-value">59%</div>
+            <div class="donut-label">With workplace plan</div>
+          </div>
+          <div class="donut-item">
+            <svg viewBox="0 0 36 36">
+              <circle class="donut-ring" cx="18" cy="18" r="14" stroke-width="4"/>
+              <circle class="donut-segment" cx="18" cy="18" r="14" stroke-width="4" stroke="var(--cw-sand)" stroke-dasharray="34 66" stroke-dashoffset="25"/>
+            </svg>
+            <div class="donut-value" style="color: var(--cw-sand);">34%</div>
+            <div class="donut-label">Without workplace plan</div>
+          </div>
+        </div>
+        <div class="callout" style="margin-top: 16px;">
+          <p>Workplace plans raise retirement confidence by 25 percentage points.</p>
+          <div class="callout-source">— HOOPP 2024 Canadian Retirement Survey</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: The Coverage Gap -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Opportunity</div>
+    <h2>The massive <span class="accent">coverage gap</span></h2>
+
+    <div class="card-grid cols-3">
+      <div class="card" style="text-align: center;">
+        <div class="big-number">9.1M</div>
+        <div class="stat-label">Canadian workers without a workplace retirement plan</div>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="big-number">~600k</div>
+        <div class="stat-label">SMBs (4-500 employees) in Canada</div>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="big-number">~80k</div>
+        <div class="stat-label">Currently have a retirement plan — that's only 13%</div>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top: 32px;">
+      <div class="split-left">
+        <h3>Public vs. Private Sector</h3>
+        <!-- SVG horizontal bar chart -->
+        <svg width="100%" height="120" viewBox="0 0 500 120" style="margin-top: 16px;">
+          <text x="0" y="30" fill="#dbdbd7" font-size="13" font-family="Inter">Public sector RPP</text>
+          <rect x="160" y="16" width="320" height="24" rx="4" fill="rgba(252,252,247,0.06)"/>
+          <rect x="160" y="16" width="280" height="24" rx="4" fill="#00ce7c"/>
+          <text x="450" y="33" fill="#00ce7c" font-size="13" font-weight="600" font-family="Inter">87.4%</text>
+
+          <text x="0" y="78" fill="#dbdbd7" font-size="13" font-family="Inter">Private sector RPP</text>
+          <rect x="160" y="64" width="320" height="24" rx="4" fill="rgba(252,252,247,0.06)"/>
+          <rect x="160" y="64" width="65" height="24" rx="4" fill="#c2b26e"/>
+          <text x="235" y="81" fill="#c2b26e" font-size="13" font-weight="600" font-family="Inter">20.4%</text>
+        </svg>
+      </div>
+      <div class="split-right">
+        <h3>Canada vs. the U.S.</h3>
+        <!-- SVG horizontal bar chart -->
+        <svg width="100%" height="120" viewBox="0 0 500 120" style="margin-top: 16px;">
+          <text x="0" y="30" fill="#dbdbd7" font-size="13" font-family="Inter">U.S. small employers</text>
+          <rect x="160" y="16" width="320" height="24" rx="4" fill="rgba(252,252,247,0.06)"/>
+          <rect x="160" y="16" width="154" height="24" rx="4" fill="#c5b6f1"/>
+          <text x="324" y="33" fill="#c5b6f1" font-size="13" font-weight="600" font-family="Inter">48%</text>
+
+          <text x="0" y="78" fill="#dbdbd7" font-size="13" font-family="Inter">Canadian SMEs</text>
+          <rect x="160" y="64" width="320" height="24" rx="4" fill="rgba(252,252,247,0.06)"/>
+          <rect x="160" y="64" width="61" height="24" rx="4" fill="#c2b26e"/>
+          <text x="231" y="81" fill="#c2b26e" font-size="13" font-weight="600" font-family="Inter">19%</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: Basics of Retirement Finance (updated to $500/mo) -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">Retirement Finance 101</div>
+    <h2>The basics of <span class="accent">retirement math</span></h2>
+
+    <div class="split">
+      <div class="split-left">
+        <h3>The replacement ratio</h3>
+        <p>Financial planners typically recommend replacing 60-80% of pre-retirement income. For someone earning $75,000:</p>
+        <div class="card-grid cols-2" style="margin-top: 16px;">
+          <div class="card" style="text-align: center;">
+            <div class="big-number" style="font-size: 32px;">$45-60k</div>
+            <div class="stat-label">Annual retirement income target</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div class="big-number" style="font-size: 32px;">~$28k</div>
+            <div class="stat-label">Max CPP + OAS provides</div>
+          </div>
+        </div>
+        <div class="callout" style="margin-top: 16px;">
+          <p>The gap of $17,000-$32,000/year must come from workplace plans and personal savings. That's the advisor opportunity.</p>
+        </div>
+      </div>
+      <div class="split-right">
+        <h3>Why starting early matters</h3>
+        <p>The power of compounding on a <strong style="color:var(--cw-emerald);">$500/month</strong> contribution:</p>
+        <!-- Visual bar chart for compounding -->
+        <svg width="100%" height="250" viewBox="0 0 440 250" style="margin-top: 16px;">
+          <!-- Bars -->
+          <rect x="30" y="20" width="80" height="180" rx="6" fill="var(--cw-emerald)" opacity="0.9"/>
+          <rect x="140" y="70" width="80" height="130" rx="6" fill="var(--cw-emerald)" opacity="0.7"/>
+          <rect x="250" y="120" width="80" height="80" rx="6" fill="var(--cw-emerald)" opacity="0.5"/>
+          <rect x="360" y="155" width="80" height="45" rx="6" fill="var(--cw-emerald)" opacity="0.3"/>
+          <!-- Values -->
+          <text x="70" y="15" text-anchor="middle" fill="#00ce7c" font-size="14" font-weight="600" font-family="Inter">$995k</text>
+          <text x="180" y="65" text-anchor="middle" fill="#00ce7c" font-size="14" font-weight="600" font-family="Inter">$502k</text>
+          <text x="290" y="115" text-anchor="middle" fill="#00ce7c" font-size="14" font-weight="600" font-family="Inter">$231k</text>
+          <text x="400" y="150" text-anchor="middle" fill="#00ce7c" font-size="14" font-weight="600" font-family="Inter">$82k</text>
+          <!-- Labels -->
+          <text x="70" y="220" text-anchor="middle" fill="#bbbbb7" font-size="12" font-family="Inter">Start at 25</text>
+          <text x="70" y="236" text-anchor="middle" fill="#9c9c99" font-size="11" font-family="Inter">40 years</text>
+          <text x="180" y="220" text-anchor="middle" fill="#bbbbb7" font-size="12" font-family="Inter">Start at 35</text>
+          <text x="180" y="236" text-anchor="middle" fill="#9c9c99" font-size="11" font-family="Inter">30 years</text>
+          <text x="290" y="220" text-anchor="middle" fill="#bbbbb7" font-size="12" font-family="Inter">Start at 45</text>
+          <text x="290" y="236" text-anchor="middle" fill="#9c9c99" font-size="11" font-family="Inter">20 years</text>
+          <text x="400" y="220" text-anchor="middle" fill="#bbbbb7" font-size="12" font-family="Inter">Start at 55</text>
+          <text x="400" y="236" text-anchor="middle" fill="#9c9c99" font-size="11" font-family="Inter">10 years</text>
+        </svg>
+        <div style="font-size: 12px; color: var(--cw-cloud-d3); text-align: center;">Assumes 6% annual return, compounded monthly</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 6: GRS Market Overview -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Market</div>
+    <h2>Group retirement is a <span class="accent">$365.6B</span> market — and growing</h2>
+
+    <div class="card-grid cols-3">
+      <div class="card" style="text-align: center;">
+        <div class="big-number">$365.6B</div>
+        <div class="stat-label">Total CAP assets under administration (June 2025)</div>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="big-number">83,417</div>
+        <div class="stat-label">CAP client plans across Canada</div>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="big-number">15.5M</div>
+        <div class="stat-label">Plan member lives administered</div>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top: 32px;">
+      <div class="split-left">
+        <h3>$365.6B CAP market breakdown</h3>
+        <!-- Donut chart: real data from Benefits Canada 2025 CAP Suppliers Report -->
+        <div style="text-align: center; margin-top: 16px;">
+          <svg width="200" height="200" viewBox="0 0 42 42" style="transform: rotate(-90deg);">
+            <circle class="donut-ring" cx="21" cy="21" r="16" stroke-width="6"/>
+            <circle cx="21" cy="21" r="16" stroke-width="6" fill="none" stroke="var(--cw-emerald)" stroke-dasharray="47 53" stroke-dashoffset="0"/>
+            <circle cx="21" cy="21" r="16" stroke-width="6" fill="none" stroke="var(--cw-spruce-light)" stroke-dasharray="45 55" stroke-dashoffset="-47"/>
+            <circle cx="21" cy="21" r="16" stroke-width="6" fill="none" stroke="var(--cw-pistachio)" stroke-dasharray="6.5 93.5" stroke-dashoffset="-92"/>
+            <circle cx="21" cy="21" r="16" stroke-width="6" fill="none" stroke="var(--cw-lilac)" stroke-dasharray="1.5 98.5" stroke-dashoffset="-98.5"/>
+          </svg>
+          <div style="display: flex; gap: 16px; justify-content: center; margin-top: 16px; font-size: 13px; flex-wrap: wrap;">
+            <span><span style="color: var(--cw-emerald);">&#9679;</span> Group RRSP $171.8B</span>
+            <span><span style="color: var(--cw-spruce-light);">&#9679;</span> DC Plans $164.4B</span>
+            <span><span style="color: var(--cw-pistachio);">&#9679;</span> DPSP $23.8B</span>
+            <span><span style="color: var(--cw-lilac);">&#9679;</span> EPSP $5.6B</span>
+          </div>
+        </div>
+        <p style="font-size: 14px; margin-top: 12px; text-align: center;">Top 9 CAP market grew 16.8% YoY &mdash; Benefits Canada 2025 CAP Suppliers Report</p>
+      </div>
+      <div class="split-right">
+        <h3>Key growth drivers</h3>
+        <ul class="feature-list">
+          <li>SMB coverage gap closing through advisor-driven distribution</li>
+          <li>Employer competition for talent driving benefits adoption</li>
+          <li>Regulatory evolution (CAPSA 2024 update, potential auto-enrollment)</li>
+          <li>Shift from DB to DC in private sector</li>
+          <li>Financial wellness as an HR priority</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 7: Plan Types -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">Know Your Products</div>
+    <h2>Key <span class="accent">plan types</span> for advisors</h2>
+
+    <table class="plan-table">
+      <thead>
+        <tr>
+          <th style="text-align: left;">Plan Type</th>
+          <th style="text-align: left;">Tax Treatment</th>
+          <th style="text-align: left;">Employer Match</th>
+          <th style="text-align: left;">Vesting</th>
+          <th style="text-align: left;">Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="plan-name">Group RRSP</td>
+          <td>Pre-tax; taxed on withdrawal</td>
+          <td>Optional</td>
+          <td>Immediate</td>
+          <td>Most common starter plan for SMBs</td>
+        </tr>
+        <tr>
+          <td class="plan-name">DPSP</td>
+          <td>Employer-only; taxed on withdrawal</td>
+          <td>Employer only</td>
+          <td>Up to 2 years</td>
+          <td>Retention tool — paired with Group RRSP</td>
+        </tr>
+        <tr>
+          <td class="plan-name">Group TFSA</td>
+          <td>After-tax; tax-free growth & withdrawal</td>
+          <td>Optional</td>
+          <td>Immediate</td>
+          <td>Flexibility; lower-income; complement to RRSP</td>
+        </tr>
+        <tr>
+          <td class="plan-name">DC Pension</td>
+          <td>Pre-tax; locked-in until retirement</td>
+          <td>Required</td>
+          <td>Varies by province</td>
+          <td>Strongest governance; pension legislation applies</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="margin-top: 24px;">
+      <p>The most popular combination: Group RRSP + DPSP. The employer matches into the DPSP (with vesting), while the employee contributes to the Group RRSP. This gives the employer a retention lever and the employee immediate access to their own contributions.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 8: CAP Guidelines 2024 (REVISED — retirement outcomes focus) -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">Regulatory Landscape</div>
+    <h2>CAPSA <span class="accent">CAP Guidelines</span> — Updated 2024</h2>
+    <p>The first major revision in 20 years signals a fundamental shift: from simply offering investment options to actively helping members achieve <strong style="color:var(--cw-emerald);">better retirement outcomes</strong>.</p>
+
+    <div class="card-grid cols-2" style="margin-top: 24px;">
+      <div class="card">
+        <div class="icon-badge">🎯</div>
+        <h4>Outcomes over options</h4>
+        <p>The old guidelines focused on giving members investment choices. The 2024 update shifts to <strong>retirement income adequacy</strong> — sponsors must now consider whether their plan actually helps members retire well, not just invest.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">📊</div>
+        <h4>Expanded scope</h4>
+        <p>Now covers VRSPs, LIFs, RRIFs, and TFSAs — not just traditional CAPs. Applies to both the <strong>accumulation and decumulation phases</strong>, recognizing that retirement planning doesn't end at contribution.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">⚡</div>
+        <h4>Auto-features & defaults</h4>
+        <p>Explicitly encourages auto-enrollment, auto-escalation, and balanced default options. Plans with auto-enrollment see <strong>90%+ participation</strong> vs. 30-40% for voluntary.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">🧭</div>
+        <h4>Decision-making support</h4>
+        <p>Sponsors should provide members with retirement income projections, financial planning tools, and access to professional advice — not just fund fact sheets.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px; background: rgba(0,206,124,0.08); border-color: rgba(0,206,124,0.2);">
+      <h4 style="color: var(--cw-emerald);">Why this is a massive opportunity for advisors</h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+        <ul class="feature-list" style="margin: 0;">
+          <li>Employers need expert guidance to meet new governance standards</li>
+          <li>Plan sponsors must now review investment options, fees, and member outcomes regularly</li>
+        </ul>
+        <ul class="feature-list" style="margin: 0;">
+          <li>The shift to outcomes-based thinking creates ongoing advisory relationships, not one-time sales</li>
+          <li>Advisors become the compliance bridge between regulators and small employers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 9: Competitive Landscape -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">Know the Competition</div>
+    <h2>The competitive <span class="accent">landscape</span></h2>
+
+    <div class="split">
+      <div class="split-left">
+        <h3>Top CAP providers (2025)</h3>
+        <!-- Market share bar chart from Benefits Canada 2025 -->
+        <div style="margin-top: 12px;">
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;"><span>Sun Life</span><span style="color: var(--cw-emerald); font-weight: 600;">$134.5B</span></div>
+            <div style="height: 10px; background: rgba(252,252,247,0.06); border-radius: 5px; overflow: hidden;"><div style="height: 100%; width: 100%; background: var(--cw-emerald); border-radius: 5px;"></div></div>
+          </div>
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;"><span>Manulife</span><span style="color: var(--cw-emerald); font-weight: 600;">$101.0B</span></div>
+            <div style="height: 10px; background: rgba(252,252,247,0.06); border-radius: 5px; overflow: hidden;"><div style="height: 100%; width: 75%; background: var(--cw-emerald); opacity: 0.8; border-radius: 5px;"></div></div>
+          </div>
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;"><span>Canada Life</span><span style="color: var(--cw-emerald); font-weight: 600;">$60.7B</span></div>
+            <div style="height: 10px; background: rgba(252,252,247,0.06); border-radius: 5px; overflow: hidden;"><div style="height: 100%; width: 45%; background: var(--cw-emerald); opacity: 0.6; border-radius: 5px;"></div></div>
+          </div>
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;"><span>Desjardins</span><span style="color: var(--cw-sand); font-weight: 600;">$22.7B</span></div>
+            <div style="height: 10px; background: rgba(252,252,247,0.06); border-radius: 5px; overflow: hidden;"><div style="height: 100%; width: 17%; background: var(--cw-sand); border-radius: 5px;"></div></div>
+          </div>
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;"><span>Telus Health</span><span style="color: var(--cw-sand); font-weight: 600;">$20.8B</span></div>
+            <div style="height: 10px; background: rgba(252,252,247,0.06); border-radius: 5px; overflow: hidden;"><div style="height: 100%; width: 15.5%; background: var(--cw-sand); border-radius: 5px;"></div></div>
+          </div>
+          <div style="margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;"><span>iA Financial</span><span style="color: var(--cw-sand); font-weight: 600;">$13.4B</span></div>
+            <div style="height: 10px; background: rgba(252,252,247,0.06); border-radius: 5px; overflow: hidden;"><div style="height: 100%; width: 10%; background: var(--cw-sand); border-radius: 5px;"></div></div>
+          </div>
+        </div>
+        <p style="font-size: 11px; color: var(--cw-cloud-d3); margin-top: 8px;">Source: Benefits Canada 2025 CAP Suppliers Report (as of June 30, 2025)</p>
+      </div>
+      <div class="split-right">
+        <h3>The Common Wealth difference</h3>
+        <ul class="feature-list">
+          <li>Purpose-built for SMBs — no minimums, fast onboarding</li>
+          <li>Modern full-stack technology platform</li>
+          <li>Accessible to all advisors, not just institutional channels</li>
+          <li>Specialized: group retirement is all we do</li>
+        </ul>
+
+        <!-- Service cost comparison graphic -->
+        <div style="margin-top: 20px; display: flex; gap: 16px; align-items: flex-end;">
+          <div style="text-align: center;">
+            <div style="width: 100px; height: 40px; background: var(--cw-emerald); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--cw-spruce);">$70</div>
+            <div style="font-size: 12px; color: var(--cw-cloud-d2); margin-top: 4px;">Common Wealth</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 100px; height: 144px; background: var(--cw-sand); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--cw-spruce);">$253</div>
+            <div style="font-size: 12px; color: var(--cw-cloud-d2); margin-top: 4px;">Legacy carrier</div>
+          </div>
+          <div style="font-size: 12px; color: var(--cw-cloud-d3); padding-bottom: 24px;">per employer<br>service cost</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 10: Key Trends -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">What's Changing</div>
+    <h2>Key <span class="accent">trends</span> shaping the market</h2>
+
+    <div class="card-grid cols-2">
+      <div class="card">
+        <div class="icon-badge">🎯</div>
+        <h4>Decumulation Focus</h4>
+        <p>35% of participants unsure how to access savings at retirement. Regulators and plan sponsors are adding retirement income features — a major value-add for advisors.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">🧠</div>
+        <h4>Financial Wellness</h4>
+        <p>42% of Canadians say money is their #1 stress. Employers offering financial wellness programs see better retention and productivity. Plans are becoming an HR tool.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">🤖</div>
+        <h4>Digital-First Experience</h4>
+        <p>Members expect mobile access, real-time projections, and digital enrollment. Common Wealth averages 1.5 monthly log-ins per member — vs. 1-2x per year at legacy carriers.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">📈</div>
+        <h4>Auto-Features Adoption</h4>
+        <p>Auto-enrollment, auto-escalation, and target-date defaults are becoming the norm. CAPSA 2024 explicitly encourages these — they dramatically improve participation and outcomes.</p>
+      </div>
+    </div>
+
+    <!-- Trend graphic: engagement comparison -->
+    <div style="margin-top: 32px; display: flex; gap: 40px; justify-content: center; align-items: flex-end;">
+      <div style="text-align: center;">
+        <svg width="80" height="100" viewBox="0 0 80 100">
+          <rect x="0" y="0" width="80" height="100" rx="6" fill="var(--cw-emerald)" opacity="0.15"/>
+          <rect x="0" y="3" width="80" height="97" rx="6" fill="var(--cw-emerald)"/>
+          <text x="40" y="55" text-anchor="middle" fill="var(--cw-spruce)" font-size="18" font-weight="600" font-family="Inter">1.5x</text>
+          <text x="40" y="72" text-anchor="middle" fill="var(--cw-spruce)" font-size="10" font-family="Inter">/month</text>
+        </svg>
+        <div style="font-size: 12px; color: var(--cw-cloud-d2); margin-top: 8px;">CW member<br>logins</div>
+      </div>
+      <div style="text-align: center;">
+        <svg width="80" height="100" viewBox="0 0 80 100">
+          <rect x="0" y="82" width="80" height="18" rx="4" fill="var(--cw-sand)"/>
+          <text x="40" y="96" text-anchor="middle" fill="var(--cw-spruce)" font-size="11" font-weight="600" font-family="Inter">1-2x</text>
+        </svg>
+        <div style="font-size: 12px; color: var(--cw-cloud-d2); margin-top: 8px;">Legacy carrier<br>logins/year</div>
+      </div>
+      <div style="font-size: 13px; color: var(--cw-cloud-d2); max-width: 200px; padding-bottom: 16px;">
+        Members who engage more make better contribution and investment decisions
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 11: Why GRS is Great Business -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Business Case</div>
+    <h2>Why group retirement is a <span class="accent">great business</span> for advisors</h2>
+
+    <div class="card-grid cols-3">
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge">🔁</div>
+        <h4>Recurring Revenue</h4>
+        <p>AUA-based commissions compound as plans grow. Unlike one-time insurance commissions, your book grows automatically with every payroll contribution.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge">📊</div>
+        <h4>Predictable Cash Flow</h4>
+        <p>Contribution-based commissions arrive with every payroll cycle. Monthly, bi-weekly — steady, plannable income.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge">🏔️</div>
+        <h4>Compounding AUA</h4>
+        <p>As assets grow through contributions + market returns, your AUA-based revenue grows too. A well-built book compounds year over year.</p>
+      </div>
+    </div>
+
+    <div class="card-grid cols-3" style="margin-top: 16px;">
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge">🤝</div>
+        <h4>Deepens Relationships</h4>
+        <p>Group retirement gives you a seat at the table with the business owner and HR. It opens doors to benefits cross-sell and individual planning.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge">🎯</div>
+        <h4>Stickiness</h4>
+        <p>Plans rarely move once set up. Average plan tenure is 7+ years. The switching cost is high and the relationship deepens over time.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge">🌊</div>
+        <h4>Massive TAM</h4>
+        <p>83,000+ employers have plans — but hundreds of thousands more don't. Even capturing 1% means thousands of new plans and billions in new AUA over time.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 12: Book of Business Calculator (ENHANCED) -->
+<div class="slide" data-section="0" style="align-items: flex-start; padding-top: 60px;">
+  <div class="slide-inner">
+    <div class="subtitle">Build Your Book</div>
+    <h2>Book-of-business <span class="accent">growth calculator</span></h2>
+    <p>See how your group retirement book compounds over time. Adjust the inputs to model your own growth trajectory.</p>
+
+    <div class="calculator">
+      <div class="calc-inputs">
+        <div class="calc-field">
+          <label>Plans sold per year</label>
+          <input type="number" id="calcPlans" value="12" min="1" max="200" oninput="updateCalculator()">
+          <div class="input-hint">New employer plans closed annually</div>
+        </div>
+        <div class="calc-field">
+          <label>Members per plan</label>
+          <input type="number" id="calcEmps" value="25" min="1" max="500" oninput="updateCalculator()">
+          <div class="input-hint">Average members per employer plan</div>
+        </div>
+        <div class="calc-field">
+          <label>Avg. employee contribution / year ($)</label>
+          <input type="number" id="calcContrib" value="6000" min="100" max="50000" step="100" oninput="updateCalculator()">
+          <div class="input-hint">Per employee (e.g., $500/mo = $6,000)</div>
+        </div>
+        <div class="calc-field">
+          <label>Avg. transfers in / member ($)</label>
+          <input type="number" id="calcTransfers" value="5000" min="0" max="200000" step="500" oninput="updateCalculator()">
+          <div class="input-hint">One-time transfer-in when plan starts</div>
+        </div>
+        <div class="calc-field">
+          <label>Cashflow commission (% of contributions)</label>
+          <input type="number" id="calcCFComm" value="1.0" min="0" max="5" step="0.1" oninput="updateCalculator()">
+          <div class="input-hint">Commission on each contribution dollar</div>
+        </div>
+        <div class="calc-field">
+          <label>AUA commission (% of assets)</label>
+          <input type="number" id="calcAUAComm" value="0.25" min="0" max="2" step="0.05" oninput="updateCalculator()">
+          <div class="input-hint">Trailing commission on total AUA</div>
+        </div>
+      </div>
+
+      <div class="calc-field" style="margin-bottom: 28px;">
+        <label>Investment return assumption</label>
+        <div class="slider-row">
+          <input type="range" id="calcReturn" min="0" max="12" step="0.5" value="6" oninput="updateCalculator(); document.getElementById('returnDisplay').textContent=this.value+'%'">
+          <span class="slider-value" id="returnDisplay">6%</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px;">
+        <div class="calc-chart" id="calcChartAUA">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0;">Cumulative AUA</h3>
+            <span style="font-size: 12px; color: var(--cw-emerald);">●</span>
+          </div>
+          <div id="chartBarsAUA"></div>
+        </div>
+        <div class="calc-chart" id="calcChartRev">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0;">Annual Revenue</h3>
+            <div style="display: flex; gap: 12px; font-size: 12px;">
+              <span><span style="color: var(--cw-pistachio);">●</span> Cashflow</span>
+              <span><span style="color: var(--cw-sand);">●</span> AUA-based</span>
+            </div>
+          </div>
+          <div id="chartBarsRev"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 13: Overcoming Objections -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">Overcoming Objections</div>
+    <h2>What you'll hear — and how to <span class="accent">respond</span></h2>
+
+    <div class="card-grid cols-3">
+      <div class="card">
+        <h4 style="color: var(--cw-sand);">"It's too expensive"</h4>
+        <p>No setup fees, flexible employer match, and contributions are tax-deductible.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: var(--cw-sand);">"It's too complicated"</h4>
+        <p>Modern platforms handle admin end-to-end. The employer spends minutes per month, not hours.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: var(--cw-sand);">"We're too small"</h4>
+        <p>Plans can start with as few as 2-3 employees. No minimums required.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: var(--cw-sand);">"Employees won't use it"</h4>
+        <p>Auto-enrollment drives 90%+ participation vs. 30-40% with voluntary sign-up.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: var(--cw-sand);">"We already have benefits"</h4>
+        <p>Benefits cover today. Retirement plans build their future. They're complementary, not competing.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: var(--cw-sand);">"What if employees leave?"</h4>
+        <p>DPSP vesting makes it a retention tool. And members keep their account for life.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 14: Section 1 Wrap-up -->
+<div class="slide" data-section="0">
+  <div class="slide-inner title-slide">
+    <svg width="120" height="50" viewBox="0 0 120 50" style="margin-bottom: 16px; opacity: 0.5;">
+      <path d="M5 40 Q15 10 25 25 Q35 40 45 15 Q55 -5 65 25 Q75 50 85 15 Q95 -10 105 25 Q110 35 115 30" fill="none" stroke="#00ce7c" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <div class="tagline">Section 1 — Key Takeaways</div>
+    <h1>The opportunity is <span class="accent">enormous</span></h1>
+    <div style="max-width: 700px; margin: 32px auto 0; text-align: left;">
+      <ul class="feature-list" style="font-size: 18px;">
+        <li>9.1 million Canadians lack a workplace retirement plan — this is a solvable problem</li>
+        <li>Government benefits alone replace less than 40% of income for most workers</li>
+        <li>Group retirement is sticky, recurring, compounding revenue for advisors</li>
+        <li>Modern platforms like Common Wealth have removed the historical barriers for SMBs</li>
+        <li>The regulatory environment is moving toward better retirement outcomes, not just investment options</li>
+      </ul>
+    </div>
+    <div class="meta" style="margin-top: 32px;">Up next: Sales & Set-Up →</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 2: SALES & SET-UP                       -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="slide" data-section="1">
+  <div class="slide-inner section-placeholder">
+    <div class="placeholder-icon">🎯</div>
+    <div class="tagline">Section 2</div>
+    <h2>Sales & Set-Up</h2>
+    <p>How to prospect, pitch, and onboard new group retirement plan clients. From first conversation to first payroll contribution.</p>
+    <div class="card-grid cols-3" style="margin-top: 40px; text-align: left;">
+      <div class="card">
+        <h4>Prospecting</h4>
+        <p>Identifying SMBs without plans, leveraging your existing benefits book, and using financial wellness as a door-opener.</p>
+      </div>
+      <div class="card">
+        <h4>The Sales Conversation</h4>
+        <p>Positioning the value, handling objections, building the business case for the employer, and closing the plan.</p>
+      </div>
+      <div class="card">
+        <h4>Onboarding with CW</h4>
+        <p>Plan design, enrollment workflow, payroll integration, and getting to first contribution — all through the Common Wealth platform.</p>
+      </div>
+    </div>
+    <div class="meta" style="margin-top: 40px;">Content to be presented by the Sales & Partnerships team</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 3: POST-IMPLEMENTATION SUCCESS          -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="slide" data-section="2">
+  <div class="slide-inner section-placeholder">
+    <div class="placeholder-icon">🚀</div>
+    <div class="tagline">Section 3</div>
+    <h2>Post-Implementation Success</h2>
+    <p>Keeping plans healthy, growing member engagement, and expanding your book of business after implementation.</p>
+    <div class="card-grid cols-3" style="margin-top: 40px; text-align: left;">
+      <div class="card">
+        <h4>Plan Health</h4>
+        <p>Monitoring participation rates, contribution levels, investment allocation, and member engagement metrics.</p>
+      </div>
+      <div class="card">
+        <h4>Growing the Plan</h4>
+        <p>Annual contribution increases, adding new plan types (TFSA, DPSP), member education sessions, and year-end reviews with sponsors.</p>
+      </div>
+      <div class="card">
+        <h4>Expanding Your Book</h4>
+        <p>Referral strategies, cross-selling to individual planning, and leveraging plan success stories to close new business.</p>
+      </div>
+    </div>
+    <div class="meta" style="margin-top: 40px;">Content to be presented by the Client Success team</div>
+  </div>
+</div>
+
+</div><!-- /slide-container -->
+
+<!-- ─── Navigation ─── -->
+<div class="nav-arrows">
+  <button class="nav-btn" id="prevBtn" onclick="prevSlide()">←</button>
+  <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+</div>
+
+<div class="kb-hint">
+  <kbd>←</kbd> <kbd>→</kbd> to navigate &nbsp;|&nbsp; <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> for sections
+</div>
+
+<!-- ─── JavaScript ─── -->
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentSlide = 0;
+  let navigating = false;
+
+  // Section boundaries (built dynamically)
+  const sections = [
+    { start: 0, end: 0, label: 'Group Retirement 101' },
+    { start: 0, end: 0, label: 'Sales & Set-Up' },
+    { start: 0, end: 0, label: 'Post-Implementation' }
+  ];
+
+  function buildSectionMap() {
+    const map = [[], [], []];
+    slides.forEach((s, i) => {
+      const sec = parseInt(s.dataset.section);
+      map[sec].push(i);
+    });
+    for (let i = 0; i < 3; i++) {
+      if (map[i].length > 0) {
+        sections[i].start = map[i][0];
+        sections[i].end = map[i][map[i].length - 1];
+      }
+    }
+  }
+  buildSectionMap();
+
+  function goToSlide(index, direction) {
+    if (index < 0 || index >= totalSlides || index === currentSlide || navigating) return;
+    navigating = true;
+    const dir = direction || (index > currentSlide ? 'forward' : 'back');
+
+    // Hide current slide immediately
+    slides[currentSlide].classList.remove('active');
+    slides[currentSlide].style.display = 'none';
+    slides[currentSlide].style.animation = 'none';
+
+    // Show new slide
+    currentSlide = index;
+    slides[currentSlide].style.display = 'flex';
+    slides[currentSlide].style.animation = 'none';
+
+    // Force reflow
+    void slides[currentSlide].offsetWidth;
+
+    // Apply animation based on direction
+    slides[currentSlide].style.animation = dir === 'forward'
+      ? 'slideIn 0.35s ease forwards'
+      : 'slideInReverse 0.35s ease forwards';
+    slides[currentSlide].classList.add('active');
+
+    updateUI();
+
+    setTimeout(() => { navigating = false; }, 350);
+  }
+
+  function nextSlide() { goToSlide(currentSlide + 1, 'forward'); }
+  function prevSlide() { goToSlide(currentSlide - 1, 'back'); }
+
+  function goToSection(secIndex) {
+    goToSlide(sections[secIndex].start, secIndex > getCurrentSection() ? 'forward' : 'back');
+  }
+
+  function getCurrentSection() {
+    return parseInt(slides[currentSlide].dataset.section);
+  }
+
+  function updateUI() {
+    document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+    const pct = ((currentSlide + 1) / totalSlides) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    const tabs = document.querySelectorAll('.section-tab');
+    const curSec = getCurrentSection();
+    tabs.forEach((t, i) => t.classList.toggle('active', i === curSec));
+
+    document.getElementById('prevBtn').disabled = currentSlide === 0;
+    document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+    slides[currentSlide].scrollTop = 0;
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    switch (e.key) {
+      case 'ArrowRight': case ' ': e.preventDefault(); nextSlide(); break;
+      case 'ArrowLeft': e.preventDefault(); prevSlide(); break;
+      case '1': goToSection(0); break;
+      case '2': goToSection(1); break;
+      case '3': goToSection(2); break;
+    }
+  });
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) {
+      if (dx < 0) nextSlide(); else prevSlide();
+    }
+  });
+
+  // ─── Calculator Logic (monthly compounding + separate AUA/Revenue charts) ───
+  function updateCalculator() {
+    const plans = parseInt(document.getElementById('calcPlans').value) || 0;
+    const emps = parseInt(document.getElementById('calcEmps').value) || 0;
+    const contrib = parseFloat(document.getElementById('calcContrib').value) || 0;
+    const transfers = parseFloat(document.getElementById('calcTransfers').value) || 0;
+    const cfComm = parseFloat(document.getElementById('calcCFComm').value) || 0;
+    const auaComm = parseFloat(document.getElementById('calcAUAComm').value) || 0;
+    const annualReturn = (parseFloat(document.getElementById('calcReturn').value) || 0) / 100;
+    const monthlyReturn = Math.pow(1 + annualReturn, 1/12) - 1;
+
+    const years = 10;
+    let data = [];
+    let totalAUA = 0;
+    let totalPlans = 0;
+
+    for (let y = 1; y <= years; y++) {
+      // New plans added at start of year
+      const newPlans = plans;
+      const newMembers = newPlans * emps;
+      totalPlans += newPlans;
+      const totalMembers = totalPlans * emps;
+
+      // Transfers in from new members (one-time, at start of year)
+      totalAUA += newMembers * transfers;
+
+      // Monthly compounding: each month, grow existing AUA then add contributions
+      const monthlyContrib = (totalMembers * contrib) / 12;
+      for (let m = 0; m < 12; m++) {
+        totalAUA = totalAUA * (1 + monthlyReturn);
+        totalAUA += monthlyContrib;
+      }
+
+      // Revenue calculations (based on year-end AUA)
+      const annualContribs = totalMembers * contrib;
+      const cashflowRev = annualContribs * (cfComm / 100);
+      const auaRev = totalAUA * (auaComm / 100);
+      const totalRev = cashflowRev + auaRev;
+
+      data.push({
+        year: y,
+        aum: totalAUA,
+        cashflowRev,
+        auaRev,
+        totalRev,
+        plans: totalPlans,
+        members: totalMembers
+      });
+    }
+
+    // Render AUA chart (separate)
+    const maxAUA = data[years - 1].aum;
+    let auaHTML = '';
+    data.forEach(d => {
+      const pct = maxAUA > 0 ? (d.aum / maxAUA) * 100 : 0;
+      auaHTML += `
+        <div class="chart-bar-row">
+          <div class="chart-bar-year">Year ${d.year}</div>
+          <div class="chart-bar-track">
+            <div class="chart-bar-fill-aum" style="width: ${pct}%; height: 100%; border-radius: 4px;"></div>
+          </div>
+          <div class="chart-bar-value" style="width: 100px;">
+            <span class="aum-val">${formatCurrency(d.aum)}</span>
+          </div>
+        </div>`;
+    });
+    auaHTML += '<div style="font-size: 12px; color: var(--cw-cloud-d3); margin-top: 12px;">' +
+      y10.plans + ' plans \u00b7 ' + y10.members.toLocaleString() + ' members by Year 10</div>';
+    document.getElementById('chartBarsAUA').innerHTML = auaHTML;
+
+    // Render Revenue chart (separate, stacked cashflow + AUA-based)
+    const maxRev = data[years - 1].totalRev;
+    let revHTML = '';
+    data.forEach(d => {
+      const cfPct = maxRev > 0 ? (d.cashflowRev / maxRev) * 100 : 0;
+      const auaPct = maxRev > 0 ? (d.auaRev / maxRev) * 100 : 0;
+      revHTML += `
+        <div class="chart-bar-row">
+          <div class="chart-bar-year">Year ${d.year}</div>
+          <div class="chart-bar-track">
+            <div style="position:absolute;top:0;left:0;height:100%;width:${cfPct + auaPct}%;display:flex;border-radius:4px;overflow:hidden;">
+              <div style="width:${cfPct > 0 ? (d.cashflowRev/(d.cashflowRev+d.auaRev))*100 : 0}%;background:var(--cw-pistachio);"></div>
+              <div style="flex:1;background:var(--cw-sand);"></div>
+            </div>
+          </div>
+          <div class="chart-bar-value" style="width: 100px;">
+            <span style="color:var(--cw-pistachio);">${formatCurrency(d.totalRev)}/yr</span>
+          </div>
+        </div>`;
+    });
+    revHTML += '<div style="font-size: 12px; color: var(--cw-cloud-d3); margin-top: 12px;">' +
+      'CF: ' + formatCurrency(y10.cashflowRev) + '/yr + AUA: ' + formatCurrency(y10.auaRev) + '/yr</div>';
+    document.getElementById('chartBarsRev').innerHTML = revHTML;
+  }
+
+  function formatCurrency(val) {
+    if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
+    if (val >= 1000) return '$' + (val / 1000).toFixed(0) + 'k';
+    return '$' + val.toFixed(0);
+  }
+
+  // Init: hide all non-active slides, then run calculator
+  slides.forEach((s, i) => {
+    if (i !== 0) { s.style.display = 'none'; }
+  });
+  updateCalculator();
+  updateUI();
+</script>
+</body>
+</html>
