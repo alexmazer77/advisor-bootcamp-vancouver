@@ -581,7 +581,118 @@
   </div>
 </div>
 
-<!-- Slide 2: Canada's Retirement System -->
+<!-- Slide 2: The Goal of Retirement Finance -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Big Picture</div>
+    <h2>The main goal of retirement finance sounds <span class="accent">simple</span></h2>
+    <p>Maintain your standard of living after full-time work ends.</p>
+
+    <div style="display: flex; justify-content: center; margin-top: 40px;">
+      <svg viewBox="0 0 600 300" width="700" style="max-width:100%;">
+        <!-- Axes -->
+        <line x1="80" y1="260" x2="560" y2="260" stroke="rgba(252,252,247,0.3)" stroke-width="1.5"/>
+        <line x1="80" y1="40" x2="80" y2="260" stroke="rgba(252,252,247,0.3)" stroke-width="1.5"/>
+        <!-- Axis labels -->
+        <text x="320" y="290" fill="rgba(252,252,247,0.5)" font-size="13" text-anchor="middle" font-family="Inter,sans-serif">Age</text>
+        <text x="30" y="150" fill="rgba(252,252,247,0.5)" font-size="13" text-anchor="middle" font-family="Inter,sans-serif" transform="rotate(-90, 30, 150)">Earnings</text>
+
+        <!-- Working years area (spruce/dark) -->
+        <path d="M80,260 L80,200 Q200,170 350,120 L350,260 Z" fill="var(--cw-spruce)" opacity="0.9"/>
+        <!-- Retirement income area (emerald) -->
+        <path d="M350,260 L350,120 Q420,100 520,80 L520,260 Z" fill="var(--cw-emerald)" opacity="0.85"/>
+
+        <!-- Earnings growth line -->
+        <path d="M80,200 Q200,170 350,120 Q420,100 520,80" fill="none" stroke="rgba(252,252,247,0.6)" stroke-width="2" stroke-dasharray="6,4"/>
+
+        <!-- Retirement divider -->
+        <line x1="350" y1="40" x2="350" y2="260" stroke="rgba(252,252,247,0.4)" stroke-width="1.5" stroke-dasharray="8,4"/>
+
+        <!-- Labels -->
+        <text x="200" y="210" fill="var(--cw-cloud)" font-size="16" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Working years</text>
+        <text x="200" y="230" fill="var(--cw-cloud)" font-size="14" text-anchor="middle" font-family="Inter,sans-serif">income</text>
+        <text x="440" y="200" fill="var(--cw-spruce)" font-size="16" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Retirement</text>
+        <text x="440" y="220" fill="var(--cw-spruce)" font-size="14" text-anchor="middle" font-family="Inter,sans-serif">income</text>
+
+        <!-- Annotation -->
+        <text x="440" y="60" fill="var(--cw-cloud)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif" opacity="0.7">Maintain your standard</text>
+        <text x="440" y="75" fill="var(--cw-cloud)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif" opacity="0.7">of living after work</text>
+        <line x1="440" y1="80" x2="440" y2="100" stroke="var(--cw-emerald)" stroke-width="1.5" marker-end="none"/>
+        <path d="M435,98 L440,108 L445,98" fill="none" stroke="var(--cw-emerald)" stroke-width="1.5"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: Multiple Income Sources -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Big Picture</div>
+    <h2>Most Canadians get retirement income from <span class="accent">multiple sources</span></h2>
+
+    <div style="display: flex; gap: 40px; align-items: center; margin-top: 40px;">
+      <div style="flex: 1;">
+        <svg viewBox="0 0 500 300" width="100%">
+          <!-- Axes -->
+          <line x1="70" y1="260" x2="460" y2="260" stroke="rgba(252,252,247,0.3)" stroke-width="1.5"/>
+          <line x1="70" y1="30" x2="70" y2="260" stroke="rgba(252,252,247,0.3)" stroke-width="1.5"/>
+          <text x="270" y="290" fill="rgba(252,252,247,0.5)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif">Age</text>
+          <text x="25" y="145" fill="rgba(252,252,247,0.5)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif" transform="rotate(-90, 25, 145)">Earnings</text>
+
+          <!-- Working income area -->
+          <path d="M70,260 L70,190 Q170,160 280,110 L280,260 Z" fill="var(--cw-spruce)" opacity="0.9"/>
+          <text x="165" y="210" fill="var(--cw-cloud)" font-size="15" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Job</text>
+
+          <!-- Bracket labels -->
+          <text x="165" y="25" fill="rgba(252,252,247,0.5)" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Working income</text>
+          <line x1="80" y1="32" x2="270" y2="32" stroke="rgba(252,252,247,0.3)" stroke-width="1"/>
+          <text x="370" y="25" fill="rgba(252,252,247,0.5)" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Retirement income</text>
+          <line x1="290" y1="32" x2="450" y2="32" stroke="rgba(252,252,247,0.3)" stroke-width="1"/>
+
+          <!-- Retirement divider -->
+          <line x1="280" y1="30" x2="280" y2="260" stroke="rgba(252,252,247,0.3)" stroke-width="1.5" stroke-dasharray="8,4"/>
+
+          <!-- Retirement income stacked layers -->
+          <!-- OAS - bottom layer (purple) -->
+          <rect x="280" y="210" width="170" height="50" rx="3" fill="#8b7bb5" opacity="0.9"/>
+          <text x="365" y="240" fill="white" font-size="12" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Old Age Security</text>
+
+          <!-- CPP - next layer (teal) -->
+          <rect x="280" y="160" width="170" height="50" rx="3" fill="#5bb5a0" opacity="0.9"/>
+          <text x="365" y="190" fill="white" font-size="12" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">CPP</text>
+
+          <!-- Workplace plan - next layer (emerald) -->
+          <rect x="280" y="110" width="170" height="50" rx="3" fill="var(--cw-emerald)" opacity="0.9"/>
+          <text x="365" y="140" fill="var(--cw-spruce)" font-size="12" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Workplace plan</text>
+
+          <!-- Personal savings - top layer (pistachio) -->
+          <rect x="280" y="60" width="170" height="50" rx="3" fill="var(--cw-pistachio)" opacity="0.9"/>
+          <text x="365" y="90" fill="var(--cw-spruce)" font-size="12" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Personal savings</text>
+        </svg>
+      </div>
+
+      <div style="flex: 0 0 220px;">
+        <p style="font-size: 14px; font-weight: 600; color: var(--cw-cloud-d2); margin-bottom: 16px;">And maybe also...</p>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(252,252,247,0.05); display: flex; align-items: center; justify-content: center; font-size: 20px;">🏠</div>
+            <span style="font-size: 14px; color: var(--cw-cloud-d2);">Home equity / downsizing</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(252,252,247,0.05); display: flex; align-items: center; justify-content: center; font-size: 20px;">💼</div>
+            <span style="font-size: 14px; color: var(--cw-cloud-d2);">Part-time work</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(252,252,247,0.05); display: flex; align-items: center; justify-content: center; font-size: 20px;">🏛️</div>
+            <span style="font-size: 14px; color: var(--cw-cloud-d2);">Other government programs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Canada's Retirement System -->
 <div class="slide" data-section="0">
   <div class="slide-inner">
     <div class="subtitle">The Foundation</div>
@@ -764,7 +875,51 @@
   </div>
 </div>
 
-<!-- Slide 5: Basics of Retirement Finance (updated to $500/mo) -->
+<!-- Slide 5: The Business Case for Employers -->
+<div class="slide" data-section="0">
+  <div class="slide-inner">
+    <div class="subtitle">The Employer Perspective</div>
+    <h2>Why employers <span class="accent">set up</span> workplace retirement plans</h2>
+    <p>A workplace plan isn't just good for employees — it's a strategic business decision with measurable ROI.</p>
+
+    <div class="card-grid cols-3" style="margin-top: 32px;">
+      <div class="card" style="text-align: center;">
+        <div style="font-size: 36px; font-weight: 700; color: var(--cw-emerald); margin-bottom: 8px;">86%</div>
+        <h4>Recruitment & Retention</h4>
+        <p>of employers say retirement benefits are very or extremely important for retaining talent. Replacing an employee costs up to 20% of their salary.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div style="font-size: 36px; font-weight: 700; color: var(--cw-emerald); margin-bottom: 8px;">+21%</div>
+        <h4>Productivity Gains</h4>
+        <p>net improvement in employee productivity among employers offering retirement plans, vs. only +7% among those with no retirement benefit.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div style="font-size: 36px; font-weight: 700; color: var(--cw-emerald); margin-bottom: 8px;">83%</div>
+        <h4>Reduced Financial Stress</h4>
+        <p>of employers agree retirement benefits are a cost-effective way to reduce employees' financial stress and keep them focused at work.</p>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 24px; margin-top: 28px;">
+      <div class="card" style="flex: 1; border-left: 3px solid var(--cw-pistachio);">
+        <h4 style="color: var(--cw-pistachio);">Tax advantages</h4>
+        <p>Employer contributions to registered plans are tax-deductible. Group plans offer lower fees than individual alternatives through economies of scale.</p>
+      </div>
+      <div class="card" style="flex: 1; border-left: 3px solid var(--cw-sand);">
+        <h4 style="color: var(--cw-sand);">Competitive differentiation</h4>
+        <p>Only 47% of Canadian workers have access to a workplace plan. Offering one sets an employer apart — especially for SMBs competing for talent.</p>
+      </div>
+      <div class="card" style="flex: 1; border-left: 3px solid var(--cw-lilac);">
+        <h4 style="color: var(--cw-lilac);">Employee loyalty</h4>
+        <p>82% of plan members say their retirement benefit increases loyalty to their employer. DPSP vesting adds a built-in retention lever.</p>
+      </div>
+    </div>
+
+    <div class="meta" style="margin-top: 20px;">Sources: HOOPP/Common Wealth "The Value of a Good Pension"; HOOPP 2024 Canadian Employer Pension Survey; Manulife</div>
+  </div>
+</div>
+
+<!-- Slide 6: Basics of Retirement Finance (updated to $500/mo) -->
 <div class="slide" data-section="0">
   <div class="slide-inner">
     <div class="subtitle">Retirement Finance 101</div>
