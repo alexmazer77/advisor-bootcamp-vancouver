@@ -97,8 +97,8 @@
 
   .slide {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    display: none; align-items: center; justify-content: center;
-    padding: 40px 60px;
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 60px 60px 40px;
     opacity: 0;
     pointer-events: none;
     overflow-y: auto;
@@ -443,6 +443,12 @@
     flex-shrink: 0; margin-top: 1px;
   }
 
+  /* Title & section slides: vertically center */
+  .slide:has(.title-slide), .slide:has(.section-placeholder) {
+    align-items: center;
+    padding-top: 40px;
+  }
+
   /* ─── Section placeholder ─── */
   .section-placeholder {
     text-align: center; padding: 80px 40px;
@@ -599,11 +605,11 @@
 
         <!-- Working years area (spruce/dark) -->
         <path d="M80,260 L80,200 Q200,170 350,120 L350,260 Z" fill="var(--cw-spruce)" opacity="0.9"/>
-        <!-- Retirement income area (emerald) -->
-        <path d="M350,260 L350,120 Q420,100 520,80 L520,260 Z" fill="var(--cw-emerald)" opacity="0.85"/>
+        <!-- Retirement income area (emerald) — starts ~30% below working income peak -->
+        <path d="M350,260 L350,162 Q420,148 520,130 L520,260 Z" fill="var(--cw-emerald)" opacity="0.85"/>
 
-        <!-- Earnings growth line -->
-        <path d="M80,200 Q200,170 350,120 Q420,100 520,80" fill="none" stroke="rgba(252,252,247,0.6)" stroke-width="2" stroke-dasharray="6,4"/>
+        <!-- Earnings growth line (stops at retirement) -->
+        <path d="M80,200 Q200,170 350,120" fill="none" stroke="rgba(252,252,247,0.6)" stroke-width="2" stroke-dasharray="6,4"/>
 
         <!-- Retirement divider -->
         <line x1="350" y1="40" x2="350" y2="260" stroke="rgba(252,252,247,0.4)" stroke-width="1.5" stroke-dasharray="8,4"/>
@@ -611,14 +617,14 @@
         <!-- Labels -->
         <text x="200" y="210" fill="var(--cw-cloud)" font-size="16" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Working years</text>
         <text x="200" y="230" fill="var(--cw-cloud)" font-size="14" text-anchor="middle" font-family="Inter,sans-serif">income</text>
-        <text x="440" y="200" fill="var(--cw-spruce)" font-size="16" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Retirement</text>
-        <text x="440" y="220" fill="var(--cw-spruce)" font-size="14" text-anchor="middle" font-family="Inter,sans-serif">income</text>
+        <text x="440" y="210" fill="var(--cw-spruce)" font-size="16" font-weight="600" text-anchor="middle" font-family="Inter,sans-serif">Retirement</text>
+        <text x="440" y="230" fill="var(--cw-spruce)" font-size="14" text-anchor="middle" font-family="Inter,sans-serif">income</text>
 
-        <!-- Annotation -->
-        <text x="440" y="60" fill="var(--cw-cloud)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif" opacity="0.7">Maintain your standard</text>
-        <text x="440" y="75" fill="var(--cw-cloud)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif" opacity="0.7">of living after work</text>
-        <line x1="440" y1="80" x2="440" y2="100" stroke="var(--cw-emerald)" stroke-width="1.5" marker-end="none"/>
-        <path d="M435,98 L440,108 L445,98" fill="none" stroke="var(--cw-emerald)" stroke-width="1.5"/>
+        <!-- Annotation with arrow pointing to top of retirement area -->
+        <text x="470" y="68" fill="var(--cw-cloud)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif" opacity="0.7">Maintain your standard</text>
+        <text x="470" y="83" fill="var(--cw-cloud)" font-size="12" text-anchor="middle" font-family="Inter,sans-serif" opacity="0.7">of living after work</text>
+        <line x1="470" y1="88" x2="470" y2="125" stroke="var(--cw-emerald)" stroke-width="1.5"/>
+        <path d="M465,123 L470,133 L475,123" fill="none" stroke="var(--cw-emerald)" stroke-width="1.5"/>
       </svg>
     </div>
   </div>
@@ -1293,7 +1299,7 @@
 </div>
 
 <!-- Slide 12: Book of Business Calculator (ENHANCED) -->
-<div class="slide" data-section="0" style="align-items: flex-start; padding-top: 60px;">
+<div class="slide" data-section="0">
   <div class="slide-inner">
     <div class="subtitle">Build Your Book</div>
     <h2>Book-of-business <span class="accent">growth calculator</span></h2>
