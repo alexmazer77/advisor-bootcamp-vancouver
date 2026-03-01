@@ -318,6 +318,23 @@
     border-color: var(--cw-emerald);
   }
 
+  .calc-toggle {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; cursor: pointer; border-radius: 10px;
+    background: rgba(252,252,247,0.05); border: 1px solid rgba(252,252,247,0.08);
+    margin-bottom: 16px; user-select: none; transition: background 0.2s;
+  }
+  .calc-toggle:hover { background: rgba(252,252,247,0.08); }
+  .calc-toggle span:first-child { font-size: 14px; font-weight: 600; color: var(--cw-cloud); }
+  .calc-toggle-icon { font-size: 12px; color: var(--cw-emerald); transition: transform 0.3s; }
+  .calc-toggle-icon.collapsed { transform: rotate(-90deg); }
+  .calc-collapsible {
+    max-height: 600px; overflow: hidden; transition: max-height 0.4s ease;
+  }
+  .calc-collapsible.collapsed {
+    max-height: 0;
+  }
+
   .calc-chart {
     margin-top: 32px; padding: 24px;
     background: rgba(252,252,247,0.03);
@@ -1128,56 +1145,62 @@
     <p>See how your group retirement book compounds over time. Adjust the inputs to model your own growth trajectory.</p>
 
     <div class="calculator">
-      <div class="calc-inputs">
-        <div class="calc-field">
-          <label>Plans sold per year</label>
-          <input type="number" id="calcPlans" value="12" min="1" max="200" oninput="updateCalculator()">
-          <div class="input-hint">New employer plans closed annually</div>
-        </div>
-        <div class="calc-field">
-          <label>Members per plan</label>
-          <input type="number" id="calcEmps" value="25" min="1" max="500" oninput="updateCalculator()">
-          <div class="input-hint">Average members per employer plan</div>
-        </div>
-        <div class="calc-field">
-          <label>Avg. employee contribution / year ($)</label>
-          <input type="number" id="calcContrib" value="6000" min="100" max="50000" step="100" oninput="updateCalculator()">
-          <div class="input-hint">Per employee (e.g., $500/mo = $6,000)</div>
-        </div>
-        <div class="calc-field">
-          <label>Cashflow commission (% of contributions)</label>
-          <input type="number" id="calcCFComm" value="1.0" min="0" max="5" step="0.1" oninput="updateCalculator()">
-          <div class="input-hint">Commission on each contribution dollar</div>
-        </div>
-        <div class="calc-field">
-          <label>AUA commission (% of assets)</label>
-          <input type="number" id="calcAUAComm" value="0.25" min="0" max="2" step="0.05" oninput="updateCalculator()">
-          <div class="input-hint">Trailing commission on total AUA</div>
-        </div>
-        <div class="calc-field">
-          <label>Avg. bulk transfer AUA ($)</label>
-          <input type="number" id="calcBulkAUA" value="1000000" min="0" max="50000000" step="50000" oninput="updateCalculator()">
-          <div class="input-hint">Total AUA transferred per bulk plan</div>
-        </div>
-        <div class="calc-field">
-          <label>Bulk transfer compensation (%)</label>
-          <input type="number" id="calcBulkComp" value="1.0" min="0" max="5" step="0.1" oninput="updateCalculator()">
-          <div class="input-hint">One-time commission on bulk transfer AUA</div>
-        </div>
+      <div class="calc-toggle" onclick="toggleCalcInputs()" id="calcToggle">
+        <span>Assumptions</span>
+        <span class="calc-toggle-icon" id="calcToggleIcon">&#9660;</span>
       </div>
+      <div class="calc-collapsible" id="calcCollapsible">
+        <div class="calc-inputs">
+          <div class="calc-field">
+            <label>Plans sold per year</label>
+            <input type="number" id="calcPlans" value="12" min="1" max="200" oninput="updateCalculator()">
+            <div class="input-hint">New employer plans closed annually</div>
+          </div>
+          <div class="calc-field">
+            <label>Members per plan</label>
+            <input type="number" id="calcEmps" value="25" min="1" max="500" oninput="updateCalculator()">
+            <div class="input-hint">Average members per employer plan</div>
+          </div>
+          <div class="calc-field">
+            <label>Avg. employee contribution / year ($)</label>
+            <input type="number" id="calcContrib" value="6000" min="100" max="50000" step="100" oninput="updateCalculator()">
+            <div class="input-hint">Per employee (e.g., $500/mo = $6,000)</div>
+          </div>
+          <div class="calc-field">
+            <label>Cashflow commission (% of contributions)</label>
+            <input type="number" id="calcCFComm" value="1.0" min="0" max="5" step="0.1" oninput="updateCalculator()">
+            <div class="input-hint">Commission on each contribution dollar</div>
+          </div>
+          <div class="calc-field">
+            <label>AUA commission (% of assets)</label>
+            <input type="number" id="calcAUAComm" value="0.25" min="0" max="2" step="0.05" oninput="updateCalculator()">
+            <div class="input-hint">Trailing commission on total AUA</div>
+          </div>
+          <div class="calc-field">
+            <label>Avg. bulk transfer AUA ($)</label>
+            <input type="number" id="calcBulkAUA" value="1000000" min="0" max="50000000" step="50000" oninput="updateCalculator()">
+            <div class="input-hint">Total AUA transferred per bulk plan</div>
+          </div>
+          <div class="calc-field">
+            <label>Bulk transfer compensation (%)</label>
+            <input type="number" id="calcBulkComp" value="1.0" min="0" max="5" step="0.1" oninput="updateCalculator()">
+            <div class="input-hint">One-time commission on bulk transfer AUA</div>
+          </div>
+        </div>
 
-      <div class="calc-field" style="margin-bottom: 12px;">
-        <label>Bulk transfers vs. startups</label>
-        <div class="slider-row">
-          <input type="range" id="calcBulkPct" min="0" max="100" step="5" value="25" oninput="updateCalculator(); document.getElementById('bulkDisplay').textContent=this.value+'% bulk / '+(100-this.value)+'% startup'">
-          <span class="slider-value" id="bulkDisplay">25% bulk / 75% startup</span>
+        <div class="calc-field" style="margin-bottom: 12px;">
+          <label>Bulk transfers vs. startups</label>
+          <div class="slider-row">
+            <input type="range" id="calcBulkPct" min="0" max="100" step="5" value="25" oninput="updateCalculator(); document.getElementById('bulkDisplay').textContent=this.value+'% bulk / '+(100-this.value)+'% startup'">
+            <span class="slider-value" id="bulkDisplay">25% bulk / 75% startup</span>
+          </div>
         </div>
-      </div>
-      <div class="calc-field" style="margin-bottom: 28px;">
-        <label>Investment return assumption</label>
-        <div class="slider-row">
-          <input type="range" id="calcReturn" min="0" max="12" step="0.5" value="6" oninput="updateCalculator(); document.getElementById('returnDisplay').textContent=this.value+'%'">
-          <span class="slider-value" id="returnDisplay">6%</span>
+        <div class="calc-field" style="margin-bottom: 28px;">
+          <label>Investment return assumption</label>
+          <div class="slider-row">
+            <input type="range" id="calcReturn" min="0" max="12" step="0.5" value="6" oninput="updateCalculator(); document.getElementById('returnDisplay').textContent=this.value+'%'">
+            <span class="slider-value" id="returnDisplay">6%</span>
+          </div>
         </div>
       </div>
 
@@ -1550,6 +1573,13 @@
     if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
     if (val >= 1000) return '$' + (val / 1000).toFixed(0) + 'k';
     return '$' + val.toFixed(0);
+  }
+
+  function toggleCalcInputs() {
+    const el = document.getElementById('calcCollapsible');
+    const icon = document.getElementById('calcToggleIcon');
+    el.classList.toggle('collapsed');
+    icon.classList.toggle('collapsed');
   }
 
   // Init: hide all non-active slides, then run calculator
