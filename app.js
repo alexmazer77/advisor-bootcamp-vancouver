@@ -70,9 +70,11 @@
     const pct = ((currentSlide + 1) / totalSlides) * 100;
     document.getElementById('progressFill').style.width = pct + '%';
 
-    const tabs = document.querySelectorAll('.section-tab');
     const curSec = getCurrentSection();
+    const tabs = document.querySelectorAll('.section-tabs .section-tab');
     tabs.forEach((t, i) => t.classList.toggle('active', i === curSec));
+    const mobileTabs = document.querySelectorAll('.mobile-menu .section-tab');
+    mobileTabs.forEach((t, i) => t.classList.toggle('active', i === curSec));
 
     document.getElementById('prevBtn').disabled = currentSlide === 0;
     document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
@@ -94,13 +96,37 @@
 
   // Touch/swipe support
   let touchStartX = 0;
-  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  let touchStartY = 0;
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  });
   document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 100) {
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Only trigger swipe if horizontal movement is dominant
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
       if (dx < 0) nextSlide(); else prevSlide();
     }
   });
+
+  // Mobile hamburger menu
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburgerBtn');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+
+  function mobileGoToSection(secIndex) {
+    goToSection(secIndex);
+    // Close menu after selection
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburgerBtn').classList.remove('open');
+    // Update mobile menu active tab
+    const mobileTabs = document.querySelectorAll('.mobile-menu .section-tab');
+    mobileTabs.forEach((t, i) => t.classList.toggle('active', i === secIndex));
+  }
 
   // ─── Calculator Logic (monthly compounding + separate AUA/Revenue charts) ───
   function updateCalculator() {
