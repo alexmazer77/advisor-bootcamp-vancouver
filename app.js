@@ -82,7 +82,7 @@
 
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA' || e.target.contentEditable === 'true') return;
     switch (e.key) {
       case 'ArrowRight': case ' ': e.preventDefault(); nextSlide(); break;
       case 'ArrowLeft': e.preventDefault(); prevSlide(); break;
@@ -97,14 +97,17 @@
   document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
   document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 60) {
+    if (Math.abs(dx) > 100) {
       if (dx < 0) nextSlide(); else prevSlide();
     }
   });
 
   // ─── Calculator Logic (monthly compounding + separate AUA/Revenue charts) ───
   function updateCalculator() {
-    const plans = parseInt(document.getElementById('calcPlans').value) || 0;
+    const calcPlansEl = document.getElementById('calcPlans');
+    if (!calcPlansEl) return; // Exit silently if calculator not yet loaded
+
+    const plans = parseInt(calcPlansEl.value) || 0;
     const emps = parseInt(document.getElementById('calcEmps').value) || 0;
     const contrib = parseFloat(document.getElementById('calcContrib').value) || 0;
     const cfComm = parseFloat(document.getElementById('calcCFComm').value) || 0;
@@ -214,6 +217,7 @@
   }
 
   function formatCurrency(val) {
+    if (val >= 1000000000) return '$' + (val / 1000000000).toFixed(1) + 'B';
     if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
     if (val >= 1000) return '$' + (val / 1000).toFixed(0) + 'k';
     return '$' + val.toFixed(0);
